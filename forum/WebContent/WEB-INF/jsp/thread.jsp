@@ -39,6 +39,16 @@
 						</tr>
 					</tbody>
 				</table>
+				
+				<table cellspacing="10" width="100%">
+					<tbody>
+						<tr>
+							<td valign="middle" align="left" colspan="4" nowrap="nowrap"><a href="login#"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Login" /></a>&nbsp;<a href="#"><img src="fichiers/button_topic_reply.gif" alt="Login to topic" title="Login" /></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				
 	
 				<br clear="all" />
 	
