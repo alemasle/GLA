@@ -25,6 +25,8 @@ public class JeuDeTestJdBc {
 
 		stmt.close();
 		connexion.close();
+		
+		System.out.println("Table Utilisateurs (re)cree!");
 
 	}
 
