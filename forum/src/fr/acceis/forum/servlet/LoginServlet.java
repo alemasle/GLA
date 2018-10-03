@@ -19,21 +19,24 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String user = req.getParameter("username");
 		String pass = req.getParameter("password");
-		String admin_user = "admin";
-		String pass_admin = "admin";
 
-		if (admin_user.equals(user) && pass_admin.equals(pass)) {
-			System.out.println(user + " connected");
-			
-			HttpSession session = req.getSession();
-			session.setAttribute("sess", true);
-			session.setAttribute("user", user);
-			
-			req.getRequestDispatcher("/WEB-INF/jsp/threads.jsp").forward(req, resp);
-		} else {
-			req.setAttribute("user", "Non connect&eacute;");
-			req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-			System.out.println("Failed");
+		DAOServlet dao;
+		try {
+			dao = DAOServlet.getDAO();
+			if (dao.checkUser(user, pass)) {
+
+				System.out.println(user + " connected");
+				HttpSession session = req.getSession();
+				session.setAttribute("sess", true);
+				session.setAttribute("user", user);
+				resp.sendRedirect("/forum/home");
+			} else {
+				req.setAttribute("user", "Non connect&eacute;");
+				req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+				System.out.println("Failed");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
