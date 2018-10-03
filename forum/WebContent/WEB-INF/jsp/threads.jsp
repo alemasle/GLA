@@ -23,10 +23,15 @@
 						<tr>
 							<td class="row1">
 								<p class="breadcrumbs">
-
+	
 								<c:choose>
-									<c:when test="${ sess }"> ${ user }  </c:when>
-									<c:otherwise> Non connect&eacute; </c:otherwise>
+									<c:when test="${ sess }"> ${ user } 
+										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
+									</c:when>
+									
+									<c:otherwise> Non connect&eacute; 
+										<a href="/forum/login"> <b><u>Connexion</u></b></a>
+									</c:otherwise>
 								</c:choose>
 
 								</p>
@@ -40,7 +45,9 @@
 					<table cellspacing="1" width="100%">
 						<tbody>
 							<tr>
-								<td valign="middle" align="left"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" /></td>
+								<td valign="middle" align="left">
+									<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+								</td>
 							</tr>
 						</tbody>
 					</table>

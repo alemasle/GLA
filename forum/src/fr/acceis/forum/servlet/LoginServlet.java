@@ -23,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 		String pass_admin = "admin";
 
 		if (admin_user.equals(user) && pass_admin.equals(pass)) {
-			System.out.println(user + " passed");
+			System.out.println(user + " connected");
 			
 			HttpSession session = req.getSession();
 			session.setAttribute("sess", true);

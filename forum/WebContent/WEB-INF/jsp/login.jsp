@@ -21,7 +21,7 @@
 				<tr>
 					<td class="row1">
 						<p class="breadcrumbs">
-							<a href="#">Board index</a>
+							<a href="/forum/home">Board index</a>
 						</p>
 					</td>
 				</tr>
@@ -46,13 +46,20 @@
 									<tr>
 										<td valign="top"><b class="gensmall">Login :</b></td>
 										<td><input class="post" name="username" size="25"
-											tabindex="1" type="text" /></td>
+											tabindex="1" type="text" placeholder="Username"/></td>
 									</tr>
 									<tr>
 										<td valign="top"><b class="gensmall">Mot de passe:</b></td>
 										<td><input class="post" name="password" size="25"
-											tabindex="2" type="password" /></td>
+											tabindex="2" type="password" placeholder="Password"/></td>
 									</tr>
+									
+									<c:if test="${ user == 'Non connect&eacute;'}">
+									<tr>
+										<td></td>
+										<td style="color:#FF0000">Identifiants invalide</td>
+									</tr>
+									</c:if>
 
 								</tbody>
 							</table>
@@ -67,10 +74,6 @@
 				</tbody>
 			</table>
 		</form>
-		
-		<c:if test="${ user == 'Non connect&eacute;'}">
-			<p style="color:#FF0000";>Identifiants invalide</p>
-		</c:if>
 
 		<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
 			cellpadding="0" width="100%">
