@@ -31,6 +31,7 @@
 									
 									<c:otherwise> Non connect&eacute; 
 										<a href="/forum/login"> <b><u>Connexion</u></b></a>
+										<a href="/forum/signup"> <b><u>Inscriptions</u></b></a>
 									</c:otherwise>
 								</c:choose>
 
