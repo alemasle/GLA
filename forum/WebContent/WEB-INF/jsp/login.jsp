@@ -61,21 +61,16 @@
 
 					<tr>
 						<td class="cat" colspan="2" align="center">
-							<input name="login" class="btnmain" value="Login" tabindex="5" type="submit" /> 
-								<c:if test="${ username != null }">
-									   <td valign="top" tabindex="3">Username ${username}</td>
-								</c:if>
-								<c:if test="${ username == null }">
-										<tr>
-											<td valign="top" tabindex="3">Username Null Incorrect</td>
-										</tr>
-								</c:if>
+							<input name="login" class="btnmain" value="Login" tabindex="5" type="submit" />
 						</td>
 					</tr>
 				</tbody>
 			</table>
-
 		</form>
+		
+		<c:if test="${ user == 'Non connect&eacute;'}">
+			<p style="color:#FF0000";>Identifiants invalide</p>
+		</c:if>
 
 		<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
 			cellpadding="0" width="100%">

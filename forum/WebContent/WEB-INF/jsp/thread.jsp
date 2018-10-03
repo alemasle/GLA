@@ -24,7 +24,10 @@
 					<tbody>
 						<tr>
 							<td class="row1">
-								<p class="breadcrumbs">Non connect&eacute;</p>
+								<p class="breadcrumbs"><c:choose>
+									<c:when test="${ sess }"> ${ user }  </c:when>
+									<c:otherwise> Non connect&eacute; </c:otherwise>
+								</c:choose></p>
 							</td>
 						</tr>
 					</tbody>
