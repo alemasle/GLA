@@ -24,7 +24,7 @@ public class SignUpServlet extends HttpServlet {
 		try {
 			dao = DAOServlet.getDAO();
 			if (dao.addUser(user, pass)) {
-				System.out.println("Sign up -- User = " + user + " -- Pass = " + pass);
+				System.out.println("--> " + user + " has signed up");
 				HttpSession session = req.getSession();
 				session.setAttribute("sess", true);
 				session.setAttribute("user", user);

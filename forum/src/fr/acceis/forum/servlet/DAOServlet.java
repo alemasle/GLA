@@ -42,7 +42,8 @@ public final class DAOServlet extends HttpServlet {
 		String sql = "SELECT login FROM Utilisateurs WHERE login=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		System.out.println(sql);
-		ResultSet res1 = stat.executeQuery(sql);
+		stat.setString(1, user);
+		ResultSet res1 = stat.executeQuery();
 
 		if (res1.next()) {
 			System.out.println(user + " already exists");
@@ -51,15 +52,22 @@ public final class DAOServlet extends HttpServlet {
 			return false;
 		}
 
-		ResultSet res = stat.executeQuery("SELECT id FROM Utilisateurs WHERE id = (SELECT MAX(id) FROM Utilisateurs)");
+		Statement stat1 = connexion.createStatement();
+		ResultSet res = stat1.executeQuery("SELECT id FROM Utilisateurs WHERE id = (SELECT MAX(id) FROM Utilisateurs)");
 		res.next();
 		int id = res.getInt(1);
 		System.out.println("New id = " + (id + 1));
-		stat.executeUpdate("INSERT INTO UTILISATEURS VALUES(" + (id + 1) + ",'" + user + "', '" + pass + "')");
+
+		PreparedStatement stat3 = connexion.prepareStatement("INSERT INTO UTILISATEURS VALUES(?,?,?)");
+		stat3.setInt(1, (id + 1));
+		stat3.setString(2, user);
+		stat3.setString(3, pass);
+		stat3.executeUpdate();
 
 		res.close();
 		res1.close();
 		stat.close();
+		stat1.close();
 		return true;
 	}
 
