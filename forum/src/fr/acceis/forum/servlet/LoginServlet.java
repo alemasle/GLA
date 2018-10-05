@@ -25,15 +25,16 @@ public class LoginServlet extends HttpServlet {
 			dao = DAOServlet.getDAO();
 			if (dao.checkUser(user, pass)) {
 
-				System.out.println(user + " connected");
 				HttpSession session = req.getSession();
 				session.setAttribute("sess", true);
 				session.setAttribute("user", user);
-				resp.sendRedirect("/forum/home");
+//				resp.sendRedirect("/forum/home");
+				req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
+				System.out.println("--> " + user + " connection success");
 			} else {
 				req.setAttribute("user", "Non connect&eacute;");
 				req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-				System.out.println("Failed");
+				System.out.println("--> " + user + " connection failed");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -23,12 +23,18 @@ public class SignUpServlet extends HttpServlet {
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();
-			dao.addUser(user, pass);
-			System.out.println("Sign up ---\nUser=" + user + "\npass=" + pass);
-			HttpSession session = req.getSession();
-			session.setAttribute("sess", true);
-			session.setAttribute("user", user);
-			resp.sendRedirect("/forum/home");
+			if (dao.addUser(user, pass)) {
+				System.out.println("Sign up -- User = " + user + " -- Pass = " + pass);
+				HttpSession session = req.getSession();
+				session.setAttribute("sess", true);
+				session.setAttribute("user", user);
+				resp.sendRedirect("/forum/home");
+			} else {
+				System.out.println("Fail to create user!");
+				req.setAttribute("user", "Non connect&eacute;");
+				req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

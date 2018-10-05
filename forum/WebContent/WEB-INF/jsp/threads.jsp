@@ -7,7 +7,6 @@
 	<title>FORUM</title>
 	
 	
-	
 	<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
 	</head>
 	<body class="ltr">
@@ -23,7 +22,7 @@
 						<tr>
 							<td class="row1">
 								<p class="breadcrumbs">
-	
+
 								<c:choose>
 									<c:when test="${ sess }"> ${ user } 
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
@@ -41,13 +40,14 @@
 					</tbody>
 				</table>
 	
-				<br clear="all" />
-	
+				<br clear="all" />	
 					<table cellspacing="1" width="100%">
 						<tbody>
 							<tr>
 								<td valign="middle" align="left">
-									<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+									<a href="#">
+										<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+									</a>
 								</td>
 							</tr>
 						</tbody>
@@ -77,8 +77,7 @@
 								<th>&nbsp;R&eacute;ponses&nbsp;</th>
 								<th>&nbsp;Vues&nbsp;</th>
 							</tr>
-	
-	
+
 	
 							<tr>
 								<td class="row1"><a class="topictitle" href="#" >Mon fil de discussion</a></td>

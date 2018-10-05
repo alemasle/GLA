@@ -2,6 +2,7 @@ package fr.acceis.forum.servlet;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -29,14 +30,37 @@ public final class DAOServlet extends HttpServlet {
 		return dao;
 	}
 
-	public void addUser(String user, String pass) throws SQLException {
-		Statement stat = connexion.createStatement();
+	/**
+	 * Insert a new user in the Utilisateurs table if it does not already exists
+	 * 
+	 * @param user
+	 * @param pass
+	 * @return true if the user was added, false otherwise
+	 * @throws SQLException
+	 */
+	public boolean addUser(String user, String pass) throws SQLException {
+		String sql = "SELECT login FROM Utilisateurs WHERE login=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		System.out.println(sql);
+		ResultSet res1 = stat.executeQuery(sql);
+
+		if (res1.next()) {
+			System.out.println(user + " already exists");
+			res1.close();
+			stat.close();
+			return false;
+		}
+
 		ResultSet res = stat.executeQuery("SELECT id FROM Utilisateurs WHERE id = (SELECT MAX(id) FROM Utilisateurs)");
 		res.next();
 		int id = res.getInt(1);
-		System.out.println("id found=" + id);
-		stat.executeUpdate("INSERT INTO UTILISATEURS VALUES(" + id + 1 + ",'" + user + "', '" + pass + "')");
+		System.out.println("New id = " + (id + 1));
+		stat.executeUpdate("INSERT INTO UTILISATEURS VALUES(" + (id + 1) + ",'" + user + "', '" + pass + "')");
 
+		res.close();
+		res1.close();
+		stat.close();
+		return true;
 	}
 
 	/**
@@ -48,8 +72,10 @@ public final class DAOServlet extends HttpServlet {
 	 * @throws SQLException
 	 */
 	public boolean checkUser(String user, String pass) throws SQLException {
-		Statement stat = connexion.createStatement();
-		ResultSet res = stat.executeQuery("SELECT login,password FROM Utilisateurs");
+		String sql = "SELECT login,password FROM Utilisateurs WHERE login=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setString(1, user);
+		ResultSet res = stat.executeQuery();
 
 		while (res.next()) {
 			if ((res.getString(1).compareTo(user) == 0) && (res.getString(2).compareTo(pass) == 0)) {

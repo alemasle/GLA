@@ -57,7 +57,7 @@
 									<c:if test="${ user == 'Non connect&eacute;'}">
 									<tr>
 										<td></td>
-										<td style="color:#FF0000">Identifiants invalide</td>
+										<td style="color:#FF0000">Username already taken!</td>
 									</tr>
 									</c:if>
 									

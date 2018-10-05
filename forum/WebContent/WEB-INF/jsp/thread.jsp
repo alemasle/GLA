@@ -27,8 +27,14 @@
 								<p class="breadcrumbs">
 								
 								<c:choose>
-									<c:when test="${ sess }"> ${ user }  </c:when>
-									<c:otherwise> Non connect&eacute; </c:otherwise>
+									<c:when test="${ sess }"> ${ user } 
+										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
+									</c:when>
+									
+									<c:otherwise> Non connect&eacute; 
+										<a href="/forum/login"> <b><u>Connexion</u></b></a>
+										<a href="/forum/signup"> <b><u>Inscriptions</u></b></a>
+									</c:otherwise>
 								</c:choose>
 								
 								</p>
@@ -47,30 +53,18 @@
 						</tr>
 					</tbody>
 				</table>
-				
-				<table cellspacing="10" width="100%">
-					<tbody>
-						<tr>
-							<td valign="middle" align="left" colspan="4" nowrap="nowrap"><a href="login#"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Login" /></a>&nbsp;<a href="#"><img src="fichiers/button_topic_reply.gif" alt="Login to topic" title="Login" /></a>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				
-	
+
 				<br clear="all" />
 	
 				<table class="tablebg" cellspacing="1" width="100%">
 					<tbody>
 						<tr class="row2">
-	
 							<td valign="middle" align="center"><b class="postauthor">Yves</b>
 							</td>
 							<td width="100%" height="25">
 								<table cellspacing="0" width="100%">
 									<tbody>
 										<tr>
-	
 											<td class="gensmall" width="100%">
 												<div style="float: left;">&nbsp;
 													<b>Fil de discussion :</b> Mon fil de discussion
@@ -130,7 +124,7 @@
 				<tbody>
 					<tr>
 						<td class="row1">
-							<p class="breadcrumbs">Index du forum</p>
+							<p class="breadcrumbs"><a href="/forum/home"><b>Index du forum</b></a></p>
 						</td>
 					</tr>
 				</tbody>
