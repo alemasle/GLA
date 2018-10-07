@@ -4,19 +4,37 @@ public class Thread {
 
 	private int id;
 
-	private int name;
+	private String auteur;
 
-	public Thread(int id, int name) {
+	private String name;
+
+	private int nbMsg;
+
+	public Thread(int id, String auteur, String name, int nbMsg) {
 		this.id = id;
+		this.auteur = auteur;
 		this.name = name;
+		this.nbMsg = nbMsg;
 	}
 
-	public int getName() {
+	public String toString() {
+		return "id:" + id + " auteur:" + auteur + " name: \"" + name + "\"" + " nbMsg:" + nbMsg;
+	}
+
+	public String getName() {
 		return name;
+	}
+
+	public String getAuteur() {
+		return auteur;
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	public int getNbMsg() {
+		return nbMsg;
 	}
 
 }

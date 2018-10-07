@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 
@@ -28,6 +30,11 @@ public final class DAOServlet extends HttpServlet {
 			dao = new DAOServlet(connexion);
 		}
 		return dao;
+	}
+
+	public void close() throws SQLException {
+		connexion.close();
+		dao = null;
 	}
 
 	/**
@@ -95,6 +102,68 @@ public final class DAOServlet extends HttpServlet {
 		res.close();
 		stat.close();
 		return false;
+	}
+
+	public List<Thread> getThreads() throws SQLException {
+		List<Thread> threads = new ArrayList<Thread>();
+
+		String sql = "SELECT * FROM Threads";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		ResultSet res = stat.executeQuery();
+
+		while (res.next()) {
+			int id = res.getInt(1);
+			int auteurId = res.getInt(2);
+			String name = res.getString(3);
+
+			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
+			PreparedStatement statAut = connexion.prepareStatement(sqlAut);
+			statAut.setInt(1, auteurId);
+			ResultSet aut = statAut.executeQuery();
+			while (aut.next()) {
+				String auteur = aut.getString(1);
+				String sqlNbMsg = "SELECT count(id) FROM Messages WHERE idThread=?";
+				PreparedStatement statNbMsg = connexion.prepareStatement(sqlNbMsg);
+				statNbMsg.setInt(1, id);
+				ResultSet msgs = statNbMsg.executeQuery();
+				while (msgs.next()) {
+					int nbMsg = msgs.getInt(1);
+					Thread th = new Thread(id, auteur, name, nbMsg);
+					threads.add(th);
+					System.out.println(th.toString());
+				}
+			}
+
+		}
+
+		return threads;
+	}
+
+	/**
+	 * 
+	 * @param idThread The thread's id from which the messages belong to
+	 * @return The list of message linked to the same Thread (idThread)
+	 * @throws SQLException
+	 */
+	public List<Message> getThreadMessages(int idThread) throws SQLException {
+		List<Message> msg = new ArrayList<Message>();
+
+		String sql = "SELECT * FROM Messages WHERE idThread=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, idThread);
+		ResultSet res = stat.executeQuery();
+
+		while (res.next()) {
+			int id = res.getInt(1);
+			int auteur = res.getInt(2);
+			int idThr = res.getInt(3);
+			String texte = res.getString(4);
+			Message m = new Message(id, auteur, idThr, texte);
+//			System.out.println(m.toString());
+			msg.add(m);
+		}
+
+		return msg;
 	}
 
 }
