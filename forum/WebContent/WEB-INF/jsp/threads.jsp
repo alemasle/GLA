@@ -24,7 +24,7 @@
 								<p class="breadcrumbs">
 
 								<c:choose>
-									<c:when test="${ sess }"> ${ user } 
+									<c:when test="${ sess }"> <b><c:out value="${ user }" /></b>
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
 									</c:when>
 									
@@ -79,41 +79,14 @@
 							</tr>
 
 							<c:forEach items="${threads}" var="thread">
-								<td class="row1"><a class="topictitle" href="#" >${thread.getName()}</a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#">${thread.getAuteur()}</a></p></td>
-								<td class="row1" align="center" width="50"><p class="topicdetails">${thread.getNbMsg()}</p></td>
-								<td class="row2" align="center" width="50"><p class="topicdetails">1234</p></td>
+							<tr>
+								<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
+								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#"><c:out value="${thread.getAuteur()}" /></a></p></td>
+								<td class="row1" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbMsg()}" /></p></td>
+								<td class="row2" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbVues()}" /></p></td>
+							</tr>
 							</c:forEach>
-							
-							<tr>
-								<td class="row1"><a class="topictitle" href="#" >Mon fil de discussion</a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#">Yves</a></p></td>
-								<td class="row1" align="center" width="50"><p class="topicdetails">10</p></td>
-								<td class="row2" align="center" width="50"><p class="topicdetails">1234</p></td>
-							</tr>
-	
-							<tr>
-								<td class="row1"><a class="topictitle" href="#">Mon fil de discussion</a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#">Yves</a></p></td>
-								<td class="row1" align="center" width="50"><p class="topicdetails">10</p></td>
-								<td class="row2" align="center" width="50"><p class="topicdetails">1234</p></td>
-							</tr>
-	
-							<tr>
-								<td class="row1"><a class="topictitle" href="#">Mon fil de discussion</a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#">Yves</a></p></td>
-								<td class="row1" align="center" width="50"><p class="topicdetails">10</p></td>
-								<td class="row2" align="center" width="50"><p class="topicdetails">1234</p></td>
-							</tr>
-	
-							<tr>
-								<td class="row1"><a class="topictitle" href="#">Mon fil de discussion</a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#">Yves</a></p></td>
-								<td class="row1" align="center" width="50"><p class="topicdetails">10</p></td>
-								<td class="row2" align="center" width="50"><p class="topicdetails">1234</p></td>
-							</tr>
-	
-	
+
 						</tbody>
 					</table>
 					<br clear="all" />

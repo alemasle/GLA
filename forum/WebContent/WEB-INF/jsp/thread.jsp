@@ -16,7 +16,7 @@
 		<div id="wrapcentre">
 	
 
-	
+
 			<div id="pagecontent">
 	
 				<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
@@ -27,7 +27,7 @@
 								<p class="breadcrumbs">
 								
 								<c:choose>
-									<c:when test="${ sess }"> ${ user } 
+									<c:when test="${ sess }"> <b><c:out value="${ user }" /></b>
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
 									</c:when>
 									
@@ -57,59 +57,72 @@
 				<br clear="all" />
 	
 				<table class="tablebg" cellspacing="1" width="100%">
-					<tbody>
-						<tr class="row2">
-							<td valign="middle" align="center"><b class="postauthor">Yves</b>
-							</td>
-							<td width="100%" height="25">
-								<table cellspacing="0" width="100%">
-									<tbody>
-										<tr>
-											<td class="gensmall" width="100%">
-												<div style="float: left;">&nbsp;
-													<b>Fil de discussion :</b> Mon fil de discussion
-												</div>
-												<div style="float: right;">
-													<b>Posted:</b> Wed Aug 17, 2016 2:12 pm&nbsp;
-												</div>
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-	
-					<tr class="row2">
-	
-						<td class="profile" valign="top">
-							<table cellspacing="4" align="center" width="150">
-	
-							</table> <span class="postdetails"> <b>Posts:</b> 24
-						</span>
-	
+				<c:choose>
+					<c:when test="${empty messages}">
+						<td>
+							<div class="postbody">Aucun messages dans ce fil de discussion</div>
 						</td>
-						<td valign="top">
-							<table cellspacing="5" width="100%">
+					</c:when>
+					
+					<c:otherwise>
+						<c:forEach items="${messages}" var="message">
 								<tbody>
-									<tr>
-										<td>
-											<div class="postbody">Ceci est une r&eacute;ponse au fil de discussion</div>
-											<br clear="all" /><br />
+									<tr class="row2">
+										<td valign="middle" align="center"><b class="postauthor"> <c:out value="${message.getAuteur()}" /></b>
+										</td>
+										<td width="100%" height="25">
 											<table cellspacing="0" width="100%">
 												<tbody>
-													<tr valign="middle">
-														<td class="gensmall" align="right"></td>
-													</tr>
+													<tr>
+														<td class="gensmall" width="100%">
+															<div style="float: left;">&nbsp;
+																<b><c:out value="${message.getThreadName()}" />:</b>
+															</div>
+															<div style="float: right;">
+																<b>Posted:</b> Wed Aug 17, 2016 2:12 pm&nbsp;
+															</div>
+														</td>
+													</tr>								
 												</tbody>
 											</table>
 										</td>
 									</tr>
 								</tbody>
-							</table>
-						</td>
-					</tr>
-	
+								
+								<tr class="row2">
+				
+									<td class="profile" valign="top">
+										<table cellspacing="4" align="center" width="150">
+				
+										</table> <span class="postdetails"> <b>Posts:</b> 24
+									</span>
+				
+									</td>
+									<td valign="top">
+										<table cellspacing="5" width="100%">
+											<tbody>
+												<tr>
+													<td>
+														<div class="postbody"><c:out value="${message.getTexte()}" /></div>
+														<br clear="all" /><br />
+														<table cellspacing="0" width="100%">
+															<tbody>
+																<tr valign="middle">
+																	<td class="gensmall" align="right"></td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</td>
+								</tr>
+							</c:forEach>
+					
+					</c:otherwise>
+				
+					</c:choose>
 					<tr>
 						<td class="spacer" colspan="2" height="1"><img src="fichiers/spacer.gif" alt="" width="1" height="1" /></td>
 					</tr>

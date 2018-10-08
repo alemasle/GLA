@@ -28,8 +28,7 @@ public class LoginServlet extends HttpServlet {
 				HttpSession session = req.getSession();
 				session.setAttribute("sess", true);
 				session.setAttribute("user", user);
-//				resp.sendRedirect("/forum/home");
-				req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
+				resp.sendRedirect("/forum/home");
 				System.out.println("--> " + user + " connection success");
 			} else {
 				req.setAttribute("user", "Non connect&eacute;");

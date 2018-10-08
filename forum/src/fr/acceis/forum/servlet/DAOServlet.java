@@ -107,14 +107,15 @@ public final class DAOServlet extends HttpServlet {
 	public List<Thread> getThreads() throws SQLException {
 		List<Thread> threads = new ArrayList<Thread>();
 
-		String sql = "SELECT * FROM Threads";
+		String sql = "SELECT * FROM Threads ORDER BY id desc";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		ResultSet res = stat.executeQuery();
 
 		while (res.next()) {
-			int id = res.getInt(1);
-			int auteurId = res.getInt(2);
-			String name = res.getString(3);
+			int id = res.getInt("id");
+			int auteurId = res.getInt("auteur");
+			String name = res.getString("name");
+			int nbVues = res.getInt("vues");
 
 			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
 			PreparedStatement statAut = connexion.prepareStatement(sqlAut);
@@ -128,14 +129,18 @@ public final class DAOServlet extends HttpServlet {
 				ResultSet msgs = statNbMsg.executeQuery();
 				while (msgs.next()) {
 					int nbMsg = msgs.getInt(1);
-					Thread th = new Thread(id, auteur, name, nbMsg);
+					Thread th = new Thread(id, auteur, name, nbMsg, nbVues);
 					threads.add(th);
-					System.out.println(th.toString());
+//					System.out.println(th.toString());
 				}
+				statNbMsg.close();
+				msgs.close();
 			}
-
+			statAut.close();
+			aut.close();
 		}
-
+		stat.close();
+		res.close();
 		return threads;
 	}
 
@@ -158,12 +163,51 @@ public final class DAOServlet extends HttpServlet {
 			int auteur = res.getInt(2);
 			int idThr = res.getInt(3);
 			String texte = res.getString(4);
-			Message m = new Message(id, auteur, idThr, texte);
-//			System.out.println(m.toString());
-			msg.add(m);
+
+			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
+			PreparedStatement aut = connexion.prepareStatement(sqlAut);
+			aut.setInt(1, auteur);
+			ResultSet resAut = aut.executeQuery();
+			while (resAut.next()) {
+				String auteurMsg = resAut.getString("login");
+
+				String sqlName = "SELECT name FROM Threads WHERE id=?";
+				PreparedStatement nameReq = connexion.prepareStatement(sqlName);
+				nameReq.setInt(1, idThread);
+				ResultSet resName = nameReq.executeQuery();
+
+				while (resName.next()) {
+
+					String name = resName.getString("name");
+					Message m = new Message(id, auteurMsg, idThr, texte, name);
+//					System.out.println(m.toString());
+					msg.add(m);
+				}
+				nameReq.close();
+				resName.close();
+			}
+			aut.close();
+			resAut.close();
+		}
+		stat.close();
+		res.close();
+		return msg;
+	}
+
+	public int countMessagesUser(int idAuteur) throws SQLException {
+		int result = 0;
+		String sql = "SELECT * FROM Messages WHERE auteur=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, idAuteur);
+		ResultSet res = stat.executeQuery();
+		
+		if(res.next()) {
+			result = res.getInt("count(id)");
 		}
 
-		return msg;
+		stat.close();
+		res.close();
+		return result;
 	}
 
 }
