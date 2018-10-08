@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,15 @@ public final class DAOServlet extends HttpServlet {
 		this.connexion = connexion;
 	}
 
+	/**
+	 * Create or return the dao (Singleton pattern)
+	 * 
+	 * @return the dao
+	 * @throws SQLException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	public static DAOServlet getDAO()
 			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (dao == null) {
@@ -48,7 +58,6 @@ public final class DAOServlet extends HttpServlet {
 	public boolean addUser(String user, String pass) throws SQLException {
 		String sql = "SELECT login FROM Utilisateurs WHERE login=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
-		System.out.println(sql);
 		stat.setString(1, user);
 		ResultSet res1 = stat.executeQuery();
 
@@ -59,22 +68,14 @@ public final class DAOServlet extends HttpServlet {
 			return false;
 		}
 
-		Statement stat1 = connexion.createStatement();
-		ResultSet res = stat1.executeQuery("SELECT id FROM Utilisateurs WHERE id = (SELECT MAX(id) FROM Utilisateurs)");
-		res.next();
-		int id = res.getInt(1);
-		System.out.println("New id = " + (id + 1));
-
-		PreparedStatement stat3 = connexion.prepareStatement("INSERT INTO UTILISATEURS VALUES(?,?,?)");
-		stat3.setInt(1, (id + 1));
-		stat3.setString(2, user);
-		stat3.setString(3, pass);
+		PreparedStatement stat3 = connexion.prepareStatement("INSERT INTO UTILISATEURS(login,password) VALUES(?,?)");
+		stat3.setString(1, user);
+		stat3.setString(2, pass);
 		stat3.executeUpdate();
 
-		res.close();
 		res1.close();
 		stat.close();
-		stat1.close();
+		stat3.close();
 		return true;
 	}
 
@@ -104,6 +105,12 @@ public final class DAOServlet extends HttpServlet {
 		return false;
 	}
 
+	/**
+	 * Get the list of thread and there informations
+	 * 
+	 * @return The list of thread
+	 * @throws SQLException
+	 */
 	public List<Thread> getThreads() throws SQLException {
 		List<Thread> threads = new ArrayList<Thread>();
 
@@ -150,8 +157,8 @@ public final class DAOServlet extends HttpServlet {
 	 * @return The list of message linked to the same Thread (idThread)
 	 * @throws SQLException
 	 */
-	public List<Message> getThreadMessages(int idThread) throws SQLException {
-		List<Message> msg = new ArrayList<Message>();
+	public List<PairNbPostMessage> getThreadMessages(int idThread) throws SQLException {
+		List<PairNbPostMessage> msg = new ArrayList<PairNbPostMessage>();
 
 		String sql = "SELECT * FROM Messages WHERE idThread=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
@@ -163,6 +170,9 @@ public final class DAOServlet extends HttpServlet {
 			int auteur = res.getInt(2);
 			int idThr = res.getInt(3);
 			String texte = res.getString(4);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+			java.util.Date uDate = new java.util.Date();
+			String date = dateFormat.format(uDate);
 
 			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
 			PreparedStatement aut = connexion.prepareStatement(sqlAut);
@@ -179,9 +189,12 @@ public final class DAOServlet extends HttpServlet {
 				while (resName.next()) {
 
 					String name = resName.getString("name");
-					Message m = new Message(id, auteurMsg, idThr, texte, name);
+					Message m = new Message(id, auteurMsg, idThr, texte, name, date);
+					int posts = countMessagesUser(auteur);
+
+					PairNbPostMessage p = new PairNbPostMessage(m, posts);
 //					System.out.println(m.toString());
-					msg.add(m);
+					msg.add(p);
 				}
 				nameReq.close();
 				resName.close();
@@ -194,20 +207,83 @@ public final class DAOServlet extends HttpServlet {
 		return msg;
 	}
 
+	/**
+	 * Count the number of post the author has made
+	 * 
+	 * @param idAuteur
+	 * @return the number of posts
+	 * @throws SQLException
+	 */
 	public int countMessagesUser(int idAuteur) throws SQLException {
 		int result = 0;
-		String sql = "SELECT * FROM Messages WHERE auteur=?";
+		String sql = "SELECT count(id) FROM Messages WHERE auteur=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		stat.setInt(1, idAuteur);
 		ResultSet res = stat.executeQuery();
-		
-		if(res.next()) {
-			result = res.getInt("count(id)");
+
+		if (res.next()) {
+			result = res.getInt(1);
 		}
 
 		stat.close();
 		res.close();
 		return result;
+	}
+
+	/**
+	 * Increment the number of views for the thread threadId
+	 * 
+	 * @param threadId The thread's id
+	 * @throws SQLException
+	 */
+	public void incrementeVues(int threadId) throws SQLException {
+		String sql = "UPDATE Threads SET vues=vues+1 WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, threadId);
+		stat.executeUpdate();
+		stat.close();
+	}
+
+	private int getIdAuteur(String auteur) throws SQLException {
+		String sqlAuteurId = "SELECT id FROM Utilisateurs WHERE login=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
+		statAut.setString(1, auteur);
+		ResultSet res = statAut.executeQuery();
+		if (res.next()) {
+			int aut = res.getInt("id");
+			res.close();
+			statAut.close();
+			return aut;
+		}
+		res.close();
+		statAut.close();
+		return -1;
+	}
+
+	public void newThread(String auteur, String titre) throws SQLException {
+		int auteurId = getIdAuteur(auteur);
+		String sql = "INSERT INTO Threads(auteur, name, vues) VALUES(?,?,0)";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, auteurId);
+		stat.setString(2, titre);
+		stat.executeUpdate();
+		stat.close();
+
+	}
+
+	public void newPost(int idThread, String auteur, String texte) throws SQLException, ParseException {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+		java.util.Date uDate = new java.util.Date();
+		String date = dateFormat.format(uDate);
+
+		String sql = "INSERT INTO Messages(auteur, idThread, texte, date) VALUES(?,?,?,?)";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, getIdAuteur(auteur));
+		stat.setInt(2, idThread);
+		stat.setString(3, texte);
+		stat.setString(4, date);
+		stat.executeUpdate();
 	}
 
 }

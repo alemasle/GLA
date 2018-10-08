@@ -54,7 +54,7 @@
 											tabindex="2" type="password" placeholder="Password"/></td>
 									</tr>
 									
-									<c:if test="${ user == 'Non connect&eacute;'}">
+									<c:if test="${ user == 'invite'}">
 									<tr>
 										<td></td>
 										<td style="color:#FF0000">Username already taken!</td>

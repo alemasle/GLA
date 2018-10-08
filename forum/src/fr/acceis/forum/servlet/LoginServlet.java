@@ -31,7 +31,7 @@ public class LoginServlet extends HttpServlet {
 				resp.sendRedirect("/forum/home");
 				System.out.println("--> " + user + " connection success");
 			} else {
-				req.setAttribute("user", "Non connect&eacute;");
+				req.setAttribute("user", "invite");
 				req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
 				System.out.println("--> " + user + " connection failed");
 			}

@@ -12,12 +12,15 @@ public class Message {
 
 	private String threadName;
 
-	public Message(int id, String auteur, int idThread, String texte, String threadName) {
+	private String date;
+
+	public Message(int id, String auteur, int idThread, String texte, String threadName, String date) {
 		this.id = id;
 		this.auteur = auteur;
 		this.texte = texte;
 		this.idThread = idThread;
 		this.threadName = threadName;
+		this.date = date;
 	}
 
 	public String toString() {
@@ -43,6 +46,10 @@ public class Message {
 
 	public String getThreadName() {
 		return threadName;
+	}
+
+	public String getDate() {
+		return date;
 	}
 
 }

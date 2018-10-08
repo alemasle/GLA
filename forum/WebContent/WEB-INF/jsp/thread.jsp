@@ -48,8 +48,12 @@
 				<table cellspacing="1" width="100%">
 					<tbody>
 						<tr>
-							<td valign="middle" align="left" colspan="4" nowrap="nowrap"><a href="#"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" /></a>&nbsp;<a href="#"><img src="fichiers/button_topic_reply.gif" alt="Reply to topic" title="Reply to topic" /></a>
-							</td>
+							<c:if test="${sess}">
+								<td valign="middle" align="left" colspan="4" nowrap="nowrap">
+									<a href="/forum/newthread"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" /></a>&nbsp;
+									<a href="/forum/newpost"><img src="fichiers/button_topic_reply.gif" alt="Reply to topic" title="Reply to topic" /></a>
+								</td>
+							</c:if>
 						</tr>
 					</tbody>
 				</table>
@@ -68,18 +72,17 @@
 						<c:forEach items="${messages}" var="message">
 								<tbody>
 									<tr class="row2">
-										<td valign="middle" align="center"><b class="postauthor"> <c:out value="${message.getAuteur()}" /></b>
-										</td>
+										<td valign="middle" align="center"><b class="postauthor"> <c:out value="${message.getMessage().getAuteur()}" /></b></td>
 										<td width="100%" height="25">
 											<table cellspacing="0" width="100%">
 												<tbody>
 													<tr>
 														<td class="gensmall" width="100%">
 															<div style="float: left;">&nbsp;
-																<b><c:out value="${message.getThreadName()}" />:</b>
+																<b><c:out value="${message.getMessage().getThreadName()}" />:</b>
 															</div>
 															<div style="float: right;">
-																<b>Posted:</b> Wed Aug 17, 2016 2:12 pm&nbsp;
+																<b>Posted:</b> <c:out value="${message.getMessage().getDate()}" />&nbsp;
 															</div>
 														</td>
 													</tr>								
@@ -94,7 +97,7 @@
 									<td class="profile" valign="top">
 										<table cellspacing="4" align="center" width="150">
 				
-										</table> <span class="postdetails"> <b>Posts:</b> 24
+										</table> <span class="postdetails"> <b>Posts:</b> <c:out value="${message.getNbPosts()}" />
 									</span>
 				
 									</td>
@@ -103,7 +106,7 @@
 											<tbody>
 												<tr>
 													<td>
-														<div class="postbody"><c:out value="${message.getTexte()}" /></div>
+														<div class="postbody"><c:out value="${message.getMessage().getTexte()}" /></div>
 														<br clear="all" /><br />
 														<table cellspacing="0" width="100%">
 															<tbody>

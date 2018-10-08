@@ -5,7 +5,7 @@
 	lang="en-gb">
 <head>
 
-<title>LOGIN</title>
+<title>New Message</title>
 
 <link rel="stylesheet" href="fichiers/style.css" type="text/css" />
 </head>
@@ -34,7 +34,7 @@
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tbody>
 					<tr>
-						<th colspan="2">Login</th>
+						<th colspan="2">New Message</th>
 					</tr>
 
 					<tr>
@@ -44,23 +44,9 @@
 								align="center">
 								<tbody>
 									<tr>
-										<td valign="top"><b class="gensmall">Login :</b></td>
-										<td><input class="post" name="username" size="25"
-											tabindex="1" type="text" placeholder="Username"/></td>
+										<td valign="top"><b class="gensmall">Message:</b></td>
+										<td><input class="post" name="texte" size="25" tabindex="1" type="text" placeholder="Votre message..."/></td>
 									</tr>
-									<tr>
-										<td valign="top"><b class="gensmall">Mot de passe:</b></td>
-										<td><input class="post" name="password" size="25"
-											tabindex="2" type="password" placeholder="Password"/></td>
-									</tr>
-									
-									<c:if test="${user == 'invite'}">
-									<tr>
-										<td></td>
-										<td style="color:#FF0000">Identifiants invalide</td>
-									</tr>
-									</c:if>
-
 								</tbody>
 							</table>
 						</td>
@@ -68,7 +54,7 @@
 
 					<tr>
 						<td class="cat" colspan="2" align="center">
-							<input name="login" class="btnmain" value="Login" tabindex="5" type="submit" />
+							<input name="message" class="btnmain" value="Submit" tabindex="5" type="submit" />
 						</td>
 					</tr>
 				</tbody>

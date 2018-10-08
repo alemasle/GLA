@@ -49,5 +49,23 @@
 		<servlet-name>Thread</servlet-name>
 		<url-pattern>/thread</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>NewThread</servlet-name>
+		<servlet-class>fr.acceis.forum.servlet.NewThreadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewThread</servlet-name>
+		<url-pattern>/newthread</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>NewPost</servlet-name>
+		<servlet-class>fr.acceis.forum.servlet.NewPostServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>NewPost</servlet-name>
+		<url-pattern>/newpost</url-pattern>
+	</servlet-mapping>
 
 </web-app>

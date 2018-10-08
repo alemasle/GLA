@@ -45,9 +45,13 @@
 						<tbody>
 							<tr>
 								<td valign="middle" align="left">
-									<a href="#">
-										<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
-									</a>
+								
+									<c:if test="${sess}">
+										<a href="/forum/newthread">
+											<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+										</a>
+									</c:if>						
+								
 								</td>
 							</tr>
 						</tbody>
