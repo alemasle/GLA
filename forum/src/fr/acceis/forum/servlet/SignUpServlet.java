@@ -31,7 +31,7 @@ public class SignUpServlet extends HttpServlet {
 				resp.sendRedirect("/forum/home");
 			} else {
 				System.out.println("Fail to create user!");
-				req.setAttribute("user", "Non connect&eacute;");
+				req.setAttribute("user", "invite");
 				req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 			}
 

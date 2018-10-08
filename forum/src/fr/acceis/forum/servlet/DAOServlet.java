@@ -62,7 +62,7 @@ public final class DAOServlet extends HttpServlet {
 		ResultSet res1 = stat.executeQuery();
 
 		if (res1.next()) {
-			System.out.println(user + " already exists");
+			System.out.println("\"" + user + "\" already exists");
 			res1.close();
 			stat.close();
 			return false;
