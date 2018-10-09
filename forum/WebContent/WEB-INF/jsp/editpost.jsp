@@ -5,7 +5,7 @@
 	lang="en-gb">
 <head>
 
-<title>New Message</title>
+<title>Edit Message</title>
 
 <link rel="stylesheet" href="fichiers/style.css" type="text/css" />
 </head>
@@ -34,7 +34,7 @@
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tbody>
 					<tr>
-						<th colspan="2">New Message</th>
+						<th colspan="2">Edit Message</th>
 					</tr>
 
 					<tr>
@@ -45,7 +45,7 @@
 								<tbody>
 									<tr>
 										<td valign="top"><b class="gensmall">Message:</b></td>
-										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractères max)" ></textarea></td>
+										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractères max)" ><c:out value="${txt}" /></textarea></td>
 									</tr>
 								</tbody>
 							</table>

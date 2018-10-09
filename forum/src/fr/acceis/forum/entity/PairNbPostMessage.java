@@ -1,4 +1,4 @@
-package fr.acceis.forum.servlet;
+package fr.acceis.forum.entity;
 
 public class PairNbPostMessage {
 

@@ -12,6 +12,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 
+import fr.acceis.forum.entity.Message;
+import fr.acceis.forum.entity.PairNbPostMessage;
+import fr.acceis.forum.entity.Thread;
+
 public final class DAOServlet extends HttpServlet {
 
 	private Connection connexion;
@@ -166,13 +170,12 @@ public final class DAOServlet extends HttpServlet {
 		ResultSet res = stat.executeQuery();
 
 		while (res.next()) {
-			int id = res.getInt(1);
-			int auteur = res.getInt(2);
-			int idThr = res.getInt(3);
-			String texte = res.getString(4);
-			SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
-			java.util.Date uDate = new java.util.Date();
-			String date = dateFormat.format(uDate);
+			int id = res.getInt("id");
+			int auteur = res.getInt("auteur");
+			int idThr = res.getInt("idThread");
+			String texte = res.getString("texte");
+			String date = res.getString("date");
+			boolean edited = res.getBoolean("edited");
 
 			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
 			PreparedStatement aut = connexion.prepareStatement(sqlAut);
@@ -189,8 +192,8 @@ public final class DAOServlet extends HttpServlet {
 				while (resName.next()) {
 
 					String name = resName.getString("name");
-					Message m = new Message(id, auteurMsg, idThr, texte, name, date);
-					int posts = countMessagesUser(auteur);
+					Message m = new Message(id, auteurMsg, idThr, texte, name, date, edited);
+					int posts = getPostsUser(auteur);// countMessagesUser(auteur);
 
 					PairNbPostMessage p = new PairNbPostMessage(m, posts);
 //					System.out.println(m.toString());
@@ -207,6 +210,20 @@ public final class DAOServlet extends HttpServlet {
 		return msg;
 	}
 
+	public int getPostsUser(int auteur) throws SQLException {
+		String sqlAuteurId = "SELECT posts FROM Utilisateurs WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
+		statAut.setInt(1, auteur);
+		ResultSet res = statAut.executeQuery();
+		int posts = 0;
+		if (res.next()) {
+			posts = res.getInt("posts");
+		}
+		res.close();
+		statAut.close();
+		return posts;
+	}
+
 	/**
 	 * Count the number of post the author has made
 	 * 
@@ -214,7 +231,7 @@ public final class DAOServlet extends HttpServlet {
 	 * @return the number of posts
 	 * @throws SQLException
 	 */
-	public int countMessagesUser(int idAuteur) throws SQLException {
+	private int countMessagesUser(int idAuteur) throws SQLException {
 		int result = 0;
 		String sql = "SELECT count(id) FROM Messages WHERE auteur=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
@@ -284,6 +301,66 @@ public final class DAOServlet extends HttpServlet {
 		stat.setString(3, texte);
 		stat.setString(4, date);
 		stat.executeUpdate();
+	}
+
+	public void updateNbPosts(String auteur) throws SQLException {
+		String sqlAuteurId = "SELECT id FROM Utilisateurs WHERE login=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
+		statAut.setString(1, auteur);
+		ResultSet res = statAut.executeQuery();
+		if (res.next()) {
+			int id = res.getInt("id");
+			int nbPosts = countMessagesUser(id);
+
+			String sql = "UPDATE Utilisateurs SET posts=? WHERE id=?";
+			PreparedStatement stat = connexion.prepareStatement(sql);
+			stat.setInt(1, nbPosts);
+			stat.setInt(2, id);
+			stat.executeUpdate();
+			stat.close();
+			res.close();
+			statAut.close();
+		}
+	}
+
+	public String getTexte(int idMsg) throws SQLException {
+		String sqlAuteurId = "SELECT texte FROM Messages WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
+		statAut.setInt(1, idMsg);
+		ResultSet res = statAut.executeQuery();
+
+		if (res.next()) {
+			String txt = res.getString("texte");
+			statAut.close();
+			res.close();
+			return txt;
+		}
+		statAut.close();
+		res.close();
+		return "";
+	}
+
+	public void updateDate(int idMsg) throws SQLException {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+		java.util.Date uDate = new java.util.Date();
+		String date = dateFormat.format(uDate);
+
+		String sql = "UPDATE Messages SET date=?, edited=? WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setString(1, date);
+		stat.setBoolean(2, true);
+		stat.setInt(3, idMsg);
+		stat.executeUpdate();
+		stat.close();
+	}
+
+	public void updateTexte(int idMsg, String txt) throws SQLException {
+		String sql = "UPDATE Messages SET texte=? WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setString(1, txt);
+		stat.setInt(2, idMsg);
+		stat.executeUpdate();
+		stat.close();
 	}
 
 }

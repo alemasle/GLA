@@ -10,31 +10,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import fr.acceis.forum.entity.PairNbPostMessage;
+
 public class ThreadServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+		if (session == null) {
+			resp.sendRedirect("/forum/home");
+		} else {
+			DAOServlet dao;
+			try {
+				dao = DAOServlet.getDAO();
+				int threadId = Integer.parseInt(req.getParameter("id"));
+				dao.incrementeVues(threadId);
+				List<PairNbPostMessage> messages = dao.getThreadMessages(threadId);
 
-		DAOServlet dao;
-		try {
-			dao = DAOServlet.getDAO();
-			HttpSession session = req.getSession();
-			int threadId = Integer.parseInt(req.getParameter("id"));
-			dao.incrementeVues(threadId);
-			List<PairNbPostMessage> messages = dao.getThreadMessages(threadId);
+				req.setAttribute("messages", messages);
+				session.setAttribute("idThread", threadId);
+				req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
 
-			req.setAttribute("messages", messages);
-			session.setAttribute("idThread", threadId);
-			req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
-
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

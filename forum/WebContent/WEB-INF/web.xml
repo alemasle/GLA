@@ -67,5 +67,14 @@
 		<servlet-name>NewPost</servlet-name>
 		<url-pattern>/newpost</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>EditPost</servlet-name>
+		<servlet-class>fr.acceis.forum.servlet.EditPostServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>EditPost</servlet-name>
+		<url-pattern>/editpost</url-pattern>
+	</servlet-mapping>
 
 </web-app>

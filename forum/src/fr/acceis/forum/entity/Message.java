@@ -1,4 +1,4 @@
-package fr.acceis.forum.servlet;
+package fr.acceis.forum.entity;
 
 public class Message {
 
@@ -14,13 +14,16 @@ public class Message {
 
 	private String date;
 
-	public Message(int id, String auteur, int idThread, String texte, String threadName, String date) {
+	private boolean edited;
+
+	public Message(int id, String auteur, int idThread, String texte, String threadName, String date, boolean edited) {
 		this.id = id;
 		this.auteur = auteur;
 		this.texte = texte;
 		this.idThread = idThread;
 		this.threadName = threadName;
 		this.date = date;
+		this.edited = edited;
 	}
 
 	public String toString() {
@@ -50,6 +53,10 @@ public class Message {
 
 	public String getDate() {
 		return date;
+	}
+
+	public boolean getEdited() {
+		return edited;
 	}
 
 }

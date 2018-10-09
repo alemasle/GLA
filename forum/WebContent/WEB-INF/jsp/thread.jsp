@@ -14,9 +14,7 @@
 	<body class="ltr">
 	
 		<div id="wrapcentre">
-	
-
-
+		
 			<div id="pagecontent">
 	
 				<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
@@ -82,6 +80,9 @@
 																<b><c:out value="${message.getMessage().getThreadName()}" />:</b>
 															</div>
 															<div style="float: right;">
+															<c:if test="${message.getMessage().getEdited()}">
+																<span class="postdetails"> <b>(Edited)</b></span>
+															</c:if>
 																<b>Posted:</b> <c:out value="${message.getMessage().getDate()}" />&nbsp;
 															</div>
 														</td>
@@ -97,8 +98,10 @@
 									<td class="profile" valign="top">
 										<table cellspacing="4" align="center" width="150">
 				
-										</table> <span class="postdetails"> <b>Posts:</b> <c:out value="${message.getNbPosts()}" />
-									</span>
+										</table> 
+										<span class="postdetails"> <b>Posts:</b> <c:out value="${message.getNbPosts()}" /></span>
+										<br />
+										<span><a href="/forum/editpost?id=${message.getMessage().getId()}"><b><u>Editer</u></b></a></span>
 				
 									</td>
 									<td valign="top">
@@ -106,7 +109,7 @@
 											<tbody>
 												<tr>
 													<td>
-														<div class="postbody"><c:out value="${message.getMessage().getTexte()}" /></div>
+														<div class="postbody" style="word-break:break-all;"><c:out value="${message.getMessage().getTexte()}" /></div>
 														<br clear="all" /><br />
 														<table cellspacing="0" width="100%">
 															<tbody>
