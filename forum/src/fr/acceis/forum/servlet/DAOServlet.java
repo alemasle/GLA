@@ -71,10 +71,15 @@ public final class DAOServlet extends HttpServlet {
 			stat.close();
 			return false;
 		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+		java.util.Date uDate = new java.util.Date();
+		String date = dateFormat.format(uDate);
 
-		PreparedStatement stat3 = connexion.prepareStatement("INSERT INTO UTILISATEURS(login,password) VALUES(?,?)");
+		PreparedStatement stat3 = connexion
+				.prepareStatement("INSERT INTO UTILISATEURS(login,password, signup) VALUES(?,?,?)");
 		stat3.setString(1, user);
 		stat3.setString(2, pass);
+		stat3.setString(3, date);
 		stat3.executeUpdate();
 
 		res1.close();
@@ -367,6 +372,39 @@ public final class DAOServlet extends HttpServlet {
 		stat.setInt(2, idMsg);
 		stat.executeUpdate();
 		stat.close();
+	}
+
+	public List<Thread> getThreadUser(String user) throws SQLException {
+		List<Thread> lth = new ArrayList<Thread>();
+		String sqlThreadsId = "SELECT * FROM Threads WHERE auteur=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setString(1, user);
+		ResultSet res = statAut.executeQuery();
+
+		while (res.next()) {
+			lth.add(new Thread(res.getInt("id"), res.getString("auteur"), res.getString("name"), res.getInt("nbMsg"),
+					res.getInt("nbVues")));
+
+		}
+
+		return lth;
+	}
+
+	public boolean existUser(String login) throws SQLException {
+		String sqlThreadsId = "SELECT id FROM Utilisateurs WHERE login=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setString(1, login);
+		ResultSet res = statAut.executeQuery();
+
+		if (res.next()) {
+			res.close();
+			statAut.close();
+			return true;
+		}
+
+		res.close();
+		statAut.close();
+		return false;
 	}
 
 }

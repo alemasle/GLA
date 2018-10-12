@@ -30,17 +30,12 @@ public class ThreadServlet extends HttpServlet {
 				req.setAttribute("messages", messages);
 				session.setAttribute("idThread", threadId);
 				req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
-
-			} catch (InstantiationException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (SQLException e) {
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}
+
 		}
+
 	}
 
 	@Override

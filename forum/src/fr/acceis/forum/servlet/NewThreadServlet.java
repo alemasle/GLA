@@ -19,7 +19,6 @@ public class NewThreadServlet extends HttpServlet {
 		} else {
 			req.getRequestDispatcher("/WEB-INF/jsp/newthread.jsp").forward(req, resp);
 		}
-
 	}
 
 	@Override
