@@ -38,9 +38,9 @@ public final class DAOServlet extends HttpServlet {
 	public static DAOServlet getDAO()
 			throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (dao == null) {
-			Class.forName("org.hsqldb.jdbcDriver").newInstance();
+			Class.forName("org.sqlite.JDBC").newInstance();
 			Connection connexion = DriverManager
-					.getConnection("jdbc:hsqldb:/home/alemasle/Documents/GLA/forum/data/basejpa", "sa", "");
+					.getConnection("jdbc:sqlite:/home/alemasle/Documents/GLA/forum/data/bdd.db", "sa", "");
 			dao = new DAOServlet(connexion);
 		}
 		return dao;
@@ -126,27 +126,33 @@ public final class DAOServlet extends HttpServlet {
 			int id = res.getInt("id");
 			int auteurId = res.getInt("auteur");
 			String name = res.getString("name");
+			int nbMsg = 0;
 			int nbVues = res.getInt("vues");
 
 			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
 			PreparedStatement statAut = connexion.prepareStatement(sqlAut);
 			statAut.setInt(1, auteurId);
 			ResultSet aut = statAut.executeQuery();
-			while (aut.next()) {
-				String auteur = aut.getString(1);
-				String sqlNbMsg = "SELECT count(id) FROM Messages WHERE idThread=?";
-				PreparedStatement statNbMsg = connexion.prepareStatement(sqlNbMsg);
-				statNbMsg.setInt(1, id);
-				ResultSet msgs = statNbMsg.executeQuery();
-				while (msgs.next()) {
-					int nbMsg = msgs.getInt(1);
-					Thread th = new Thread(id, auteur, name, nbMsg, nbVues);
-					threads.add(th);
-//					System.out.println(th.toString());
-				}
-				statNbMsg.close();
-				msgs.close();
+
+			String auteur = "???";
+			if (aut.next()) {
+				auteur = aut.getString("login");
 			}
+
+			String sqlNbMsg = "SELECT count(id) FROM Messages WHERE idThread=?";
+			PreparedStatement statNbMsg = connexion.prepareStatement(sqlNbMsg);
+			statNbMsg.setInt(1, id);
+			ResultSet msgs = statNbMsg.executeQuery();
+
+			if (msgs.next()) {
+				nbMsg = msgs.getInt(1);
+			}
+
+			Thread th = new Thread(id, auteur, name, nbMsg, nbVues);
+			threads.add(th);
+
+			statNbMsg.close();
+			msgs.close();
 			statAut.close();
 			aut.close();
 		}

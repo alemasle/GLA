@@ -39,7 +39,6 @@
 
 					<tr>
 						<td class="row2">
-
 							<table style="width: 100%;" cellspacing="1" cellpadding="4"
 								align="center">
 								<tbody>

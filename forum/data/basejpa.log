@@ -1,0 +1,16 @@
+/*C2*/SET SCHEMA PUBLIC
+drop table if exists Messages
+drop table if exists Threads
+drop table if exists Utilisateurs
+create table Utilisateurs (id bigint not null identity, login varchar(255), password varchar(255), posts bigint default 0,  primary key (id))
+create table Threads (id bigint not null identity, auteur bigint not null, name varchar(255), vues bigint default 0, primary key (id), constraint fk_thread_auteur foreign key (auteur) references Utilisateurs(id))
+create table Messages (id bigint not null identity, auteur bigint not null, idThread bigint not null, texte varchar(5000), date varchar(100), edited boolean default false, primary key (id), constraint fk_msg_thread foreign key (idThread) references Threads(id), constraint fk_message_auteur foreign key (auteur) references Utilisateurs(id))
+INSERT INTO UTILISATEURS VALUES(0,'admin','admin',0)
+COMMIT
+INSERT INTO UTILISATEURS VALUES(1,'pierre','pierre',0)
+COMMIT
+INSERT INTO UTILISATEURS VALUES(2,'paul','paul',0)
+COMMIT
+INSERT INTO UTILISATEURS VALUES(3,'jacques','jacques',0)
+COMMIT
+DISCONNECT
