@@ -1,6 +1,6 @@
 package fr.acceis.forum.entity;
 
-public class Utilisateurs {
+public class Utilisateur {
 
 	private String login;
 
@@ -10,11 +10,14 @@ public class Utilisateurs {
 
 	private int nbPosts;
 
-	public Utilisateurs(String login, String password, int id, int nbPosts) {
+	private String signup;
+
+	public Utilisateur(String login, String password, int id, int nbPosts, String signup) {
 		this.login = login;
 		this.password = password;
 		this.id = id;
 		this.nbPosts = nbPosts;
+		this.signup = signup;
 	}
 
 	public String getLogin() {
@@ -29,7 +32,11 @@ public class Utilisateurs {
 		return id;
 	}
 
-	public int nbPosts() {
+	public int getNbPosts() {
 		return nbPosts;
+	}
+
+	public String getSignUp() {
+		return signup;
 	}
 }

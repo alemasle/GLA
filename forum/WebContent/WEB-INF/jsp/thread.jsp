@@ -70,7 +70,7 @@
 						<c:forEach items="${messages}" var="message">
 								<tbody>
 									<tr class="row2">
-										<td valign="middle" align="center"><b class="postauthor"> <c:out value="${message.getMessage().getAuteur()}" /></b></td>
+										<td valign="middle" align="center"><b class="postauthor"><a class="username-coloured" href="/forum/profil?login=${message.getMessage().getAuteur()}"><c:out value="${message.getMessage().getAuteur()}" /> </a></b></td>
 										<td width="100%" height="25">
 											<table cellspacing="0" width="100%">
 												<tbody>

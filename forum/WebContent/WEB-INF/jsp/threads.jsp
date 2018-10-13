@@ -85,7 +85,7 @@
 							<c:forEach items="${threads}" var="thread">
 							<tr>
 								<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
-								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="#"><c:out value="${thread.getAuteur()}" /></a></p></td>
+								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}"><c:out value="${thread.getAuteur()}" /></a></p></td>
 								<td class="row1" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbMsg()}" /></p></td>
 								<td class="row2" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbVues()}" /></p></td>
 							</tr>

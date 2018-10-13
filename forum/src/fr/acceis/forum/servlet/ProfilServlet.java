@@ -1,6 +1,8 @@
 package fr.acceis.forum.servlet;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import fr.acceis.forum.entity.Thread;
+import fr.acceis.forum.entity.Utilisateur;
 
 public class ProfilServlet extends HttpServlet {
 
@@ -19,13 +22,17 @@ public class ProfilServlet extends HttpServlet {
 			dao = DAOServlet.getDAO();
 			String login = req.getParameter("login");
 
-			if (!dao.existUser(login)) {
+			if (dao.existUser(login) == null) {
 				resp.sendRedirect("/forum/home");
 			} else {
 
-				List<Thread> lthread = dao.getThreadUser(login);
+				Utilisateur user = dao.getUser(login);				
 
-				req.setAttribute("thread_answered", lthread);
+				List<Thread> lthread = dao.getThreadUser(login);
+				req.setAttribute("threads_answered", lthread);
+				req.setAttribute("login", login);
+				req.setAttribute("utilisateur", user);
+				
 				req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {

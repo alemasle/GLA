@@ -18,6 +18,14 @@ public class NewPostServlet extends HttpServlet {
 		if (session.getAttribute("user") == null) {
 			resp.sendRedirect("/forum/home");
 		} else {
+			DAOServlet dao;
+			try {
+				dao = DAOServlet.getDAO();
+				int idThread = (int) req.getSession().getAttribute("idThread");
+				dao.decrementeVues(idThread);
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+			}
 			req.getRequestDispatcher("/WEB-INF/jsp/newpost.jsp").forward(req, resp);
 		}
 

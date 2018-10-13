@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import fr.acceis.forum.entity.Message;
 import fr.acceis.forum.entity.PairNbPostMessage;
 import fr.acceis.forum.entity.Thread;
+import fr.acceis.forum.entity.Utilisateur;
 
 public final class DAOServlet extends HttpServlet {
 
@@ -204,7 +205,7 @@ public final class DAOServlet extends HttpServlet {
 
 					String name = resName.getString("name");
 					Message m = new Message(id, auteurMsg, idThr, texte, name, date, edited);
-					int posts = getPostsUser(auteur);// countMessagesUser(auteur);
+					int posts = getPostsUser(auteurMsg);// countMessagesUser(auteur);
 
 					PairNbPostMessage p = new PairNbPostMessage(m, posts);
 //					System.out.println(m.toString());
@@ -221,10 +222,10 @@ public final class DAOServlet extends HttpServlet {
 		return msg;
 	}
 
-	public int getPostsUser(int auteur) throws SQLException {
+	public int getPostsUser(String auteur) throws SQLException {
 		String sqlAuteurId = "SELECT posts FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
-		statAut.setInt(1, auteur);
+		statAut.setString(1, auteur);
 		ResultSet res = statAut.executeQuery();
 		int posts = 0;
 		if (res.next()) {
@@ -236,13 +237,36 @@ public final class DAOServlet extends HttpServlet {
 	}
 
 	/**
+	 * Count the number of post the thread has
+	 * 
+	 * @param idThread
+	 * @return the number of posts
+	 * @throws SQLException
+	 */
+	private int countMessagesThread(int idThread) throws SQLException {
+		int result = 0;
+		String sql = "SELECT count(id) FROM Messages WHERE idThread=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, idThread);
+		ResultSet res = stat.executeQuery();
+
+		if (res.next()) {
+			result = res.getInt("count(id)");
+		}
+
+		stat.close();
+		res.close();
+		return result;
+	}
+
+	/**
 	 * Count the number of post the author has made
 	 * 
 	 * @param idAuteur
 	 * @return the number of posts
 	 * @throws SQLException
 	 */
-	private int countMessagesUser(int idAuteur) throws SQLException {
+	private int countMessagesAuteur(int idAuteur) throws SQLException {
 		int result = 0;
 		String sql = "SELECT count(id) FROM Messages WHERE auteur=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
@@ -250,7 +274,7 @@ public final class DAOServlet extends HttpServlet {
 		ResultSet res = stat.executeQuery();
 
 		if (res.next()) {
-			result = res.getInt(1);
+			result = res.getInt("count(id)");
 		}
 
 		stat.close();
@@ -266,6 +290,20 @@ public final class DAOServlet extends HttpServlet {
 	 */
 	public void incrementeVues(int threadId) throws SQLException {
 		String sql = "UPDATE Threads SET vues=vues+1 WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, threadId);
+		stat.executeUpdate();
+		stat.close();
+	}
+
+	/**
+	 * Decrement the number of views for the thread threadId
+	 * 
+	 * @param threadId The thread's id
+	 * @throws SQLException
+	 */
+	public void decrementeVues(int threadId) throws SQLException {
+		String sql = "UPDATE Threads SET vues=vues-1 WHERE id=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		stat.setInt(1, threadId);
 		stat.executeUpdate();
@@ -321,7 +359,7 @@ public final class DAOServlet extends HttpServlet {
 		ResultSet res = statAut.executeQuery();
 		if (res.next()) {
 			int id = res.getInt("id");
-			int nbPosts = countMessagesUser(id);
+			int nbPosts = countMessagesAuteur(id);
 
 			String sql = "UPDATE Utilisateurs SET posts=? WHERE id=?";
 			PreparedStatement stat = connexion.prepareStatement(sql);
@@ -376,35 +414,66 @@ public final class DAOServlet extends HttpServlet {
 
 	public List<Thread> getThreadUser(String user) throws SQLException {
 		List<Thread> lth = new ArrayList<Thread>();
-		String sqlThreadsId = "SELECT * FROM Threads WHERE auteur=?";
+		int auteur = getIdAuteur(user);
+
+		String sqlThreadsId = "SELECT * FROM Threads WHERE auteur=? ORDER BY id desc";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
-		statAut.setString(1, user);
+		statAut.setInt(1, auteur);
 		ResultSet res = statAut.executeQuery();
 
 		while (res.next()) {
-			lth.add(new Thread(res.getInt("id"), res.getString("auteur"), res.getString("name"), res.getInt("nbMsg"),
-					res.getInt("nbVues")));
+			int id = res.getInt("id");
+			int nbMsg = countMessagesThread(id);
+			lth.add(new Thread(id, user, res.getString("name"), nbMsg, res.getInt("vues")));
 
 		}
 
 		return lth;
 	}
 
-	public boolean existUser(String login) throws SQLException {
-		String sqlThreadsId = "SELECT id FROM Utilisateurs WHERE login=?";
+	public String existUser(int idAut) throws SQLException {
+		String sqlThreadsId = "SELECT login FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
-		statAut.setString(1, login);
+		statAut.setInt(1, idAut);
 		ResultSet res = statAut.executeQuery();
-
+		String log = null;
 		if (res.next()) {
-			res.close();
-			statAut.close();
-			return true;
+			log = res.getString("login");
 		}
 
 		res.close();
 		statAut.close();
-		return false;
+		return log;
+	}
+
+	public String existUser(String login) throws SQLException {
+		int idAut = getIdAuteur(login);
+		return existUser(idAut);
+	}
+
+	public Utilisateur getUser(int idUser) throws SQLException {
+		String sqlThreadsId = "SELECT * FROM Utilisateurs WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setInt(1, idUser);
+		ResultSet res = statAut.executeQuery();
+
+		Utilisateur user = null;
+		if (res.next()) {
+			String login = res.getString("login");
+			String password = "hidden";
+			int id = res.getInt("id");
+			int nbPosts = res.getInt("posts");
+			String signup = res.getString("signup");
+
+			user = new Utilisateur(login, password, id, nbPosts, signup);
+		}
+
+		return user;
+	}
+
+	public Utilisateur getUser(String idUser) throws SQLException {
+		int user = getIdAuteur(idUser);
+		return getUser(user);
 	}
 
 }

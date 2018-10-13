@@ -40,7 +40,7 @@
 		<servlet-name>SignUp</servlet-name>
 		<url-pattern>/signup</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>Thread</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.ThreadServlet</servlet-class>
@@ -49,7 +49,7 @@
 		<servlet-name>Thread</servlet-name>
 		<url-pattern>/thread</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>NewThread</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.NewThreadServlet</servlet-class>
@@ -58,7 +58,7 @@
 		<servlet-name>NewThread</servlet-name>
 		<url-pattern>/newthread</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>NewPost</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.NewPostServlet</servlet-class>
@@ -67,7 +67,7 @@
 		<servlet-name>NewPost</servlet-name>
 		<url-pattern>/newpost</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>EditPost</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.EditPostServlet</servlet-class>
@@ -75,6 +75,15 @@
 	<servlet-mapping>
 		<servlet-name>EditPost</servlet-name>
 		<url-pattern>/editpost</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>Profil</servlet-name>
+		<servlet-class>fr.acceis.forum.servlet.ProfilServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Profil</servlet-name>
+		<url-pattern>/profil</url-pattern>
 	</servlet-mapping>
 
 </web-app>

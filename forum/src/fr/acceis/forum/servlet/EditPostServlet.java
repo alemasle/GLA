@@ -14,24 +14,24 @@ public class EditPostServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
-		if (session == null) {
+		if (session == null || req.getSession().getAttribute("idThread") == null) {
 			resp.sendRedirect("/forum/home");
+
 		} else {
 
-			if (req.getSession().getAttribute("idThread") == null) {
-				resp.sendRedirect("/forum/home");
-			} else {
-				DAOServlet dao;
-				try {
-					dao = DAOServlet.getDAO();
-					int idMsg = Integer.parseInt(req.getParameter("id"));
-					String msg = dao.getTexte(idMsg);
-					req.setAttribute("txt", msg);
-				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-					e.printStackTrace();
-				}
-				req.getRequestDispatcher("/WEB-INF/jsp/editpost.jsp").forward(req, resp);
+			DAOServlet dao;
+			try {
+				dao = DAOServlet.getDAO();
+				int idMsg = Integer.parseInt(req.getParameter("id"));
+				int idThread = (int) req.getSession().getAttribute("idThread");
+				dao.decrementeVues(idThread);
+				String msg = dao.getTexte(idMsg);
+				req.setAttribute("txt", msg);
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
 			}
+			req.getRequestDispatcher("/WEB-INF/jsp/editpost.jsp").forward(req, resp);
+
 		}
 
 	}

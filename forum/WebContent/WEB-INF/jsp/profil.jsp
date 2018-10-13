@@ -4,17 +4,16 @@
 	lang="en-gb">
 	<head>
 	
-	<title>Profil</title>
-	
+	<title>Profil de "<c:out value="${login}" />"</title>
 	
 	
 	<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
-	
 	</head>
 	<body class="ltr">
 	
+	
 		<div id="wrapcentre">
-		
+	
 			<div id="pagecontent">
 	
 				<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
@@ -23,7 +22,7 @@
 						<tr>
 							<td class="row1">
 								<p class="breadcrumbs">
-								
+
 								<c:choose>
 									<c:when test="${ sess }"> <b><c:out value="${ user }" /></b>
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
@@ -34,110 +33,86 @@
 										<a href="/forum/signup"> <b><u>Inscriptions</u></b></a>
 									</c:otherwise>
 								</c:choose>
-								
+
 								</p>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 	
-				<br clear="all" />
-	
-				<table cellspacing="1" width="100%">
-					<tbody>
-						<tr>
-							<c:if test="${sess}">
-								<td valign="middle" align="left" colspan="4" nowrap="nowrap">
-									<a href="/forum/newthread"><img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" /></a>&nbsp;
-									<a href="/forum/newpost"><img src="fichiers/button_topic_reply.gif" alt="Reply to topic" title="Reply to topic" /></a>
+				<br clear="all" />	
+					<table cellspacing="1" width="100%">
+						<tbody>
+							<tr>
+								<img src="fichiers/${login}.jpg" alt="${image} picture" height="5%" width="5%"/>							
+							</tr>
+							<tr>
+								<td valign="middle" align="left">
+									<b><c:out value="${login}" /></b>
 								</td>
-							</c:if>
-						</tr>
-					</tbody>
-				</table>
-
+							
+								<td valign="middle" align="right">
+								
+									<c:if test="${sess}">
+										<a href="/forum/newthread">
+											<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+										</a>
+									</c:if>						
+								
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<b>Nombre de posts: </b><c:out value="${utilisateur.getNbPosts()}" />
+									<br />
+									<b>Inscription: </b><c:out value="${utilisateur.getSignUp()}" />
+								</td>
+<!-- 								<td> -->
+									
+<!-- 								</td> -->
+							</tr>
+						</tbody>
+					</table>
+	
 				<br clear="all" />
 	
-				<table class="tablebg" cellspacing="1" width="100%">
-				<c:choose>
-					<c:when test="${empty messages}">
-						<td>
-							<div class="postbody">Aucun messages dans ce fil de discussion</div>
-						</td>
-					</c:when>
-					
-					<c:otherwise>
-						<c:forEach items="${messages}" var="message">
-								<tbody>
-									<tr class="row2">
-										<td valign="middle" align="center"><b class="postauthor"> <c:out value="${message.getMessage().getAuteur()}" /></b></td>
-										<td width="100%" height="25">
-											<table cellspacing="0" width="100%">
-												<tbody>
-													<tr>
-														<td class="gensmall" width="100%">
-															<div style="float: left;">&nbsp;
-																<b><c:out value="${message.getMessage().getThreadName()}" />:</b>
-															</div>
-															<div style="float: right;">
-															<c:if test="${message.getMessage().getEdited()}">
-																<span class="postdetails"> <b>(Edited)</b></span>
-															</c:if>
-																<b>Posted:</b> <c:out value="${message.getMessage().getDate()}" />&nbsp;
-															</div>
-														</td>
-													</tr>								
-												</tbody>
-											</table>
-										</td>
-									</tr>
-								</tbody>
-								
-								<tr class="row2">
-				
-									<td class="profile" valign="top">
-										<table cellspacing="4" align="center" width="150">
-				
-										</table> 
-										<span class="postdetails"> <b>Posts:</b> <c:out value="${message.getNbPosts()}" /></span>
-										<br />
-										<span><a href="/forum/editpost?id=${message.getMessage().getId()}"><b><u>Editer</u></b></a></span>
-				
-									</td>
-									<td valign="top">
-										<table cellspacing="5" width="100%">
-											<tbody>
-												<tr>
-													<td>
-														<div class="postbody" style="word-break:break-all;"><c:out value="${message.getMessage().getTexte()}" /></div>
-														<br clear="all" /><br />
-														<table cellspacing="0" width="100%">
-															<tbody>
-																<tr valign="middle">
-																	<td class="gensmall" align="right"></td>
-																</tr>
-															</tbody>
-														</table>
-													</td>
-												</tr>
-											</tbody>
-										</table>
-									</td>
-								</tr>
+					<table class="tablebg" cellspacing="1" width="100%">
+						<tbody>
+							<tr>
+								<td class="cat" colspan="4">
+									<table cellspacing="0" width="100%">
+										<tbody>
+											<tr class="nav">
+												<td valign="middle">Fils de discussion de <c:out value="${login}" /></td>
+												<td valign="middle" align="right">&nbsp;</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+	
+							<tr>
+	
+								<th>&nbsp;Topics&nbsp;</th>
+								<th>&nbsp;Auteur&nbsp;</th>
+								<th>&nbsp;R&eacute;ponses&nbsp;</th>
+								<th>&nbsp;Vues&nbsp;</th>
+							</tr>
+
+							<c:forEach items="${threads_answered}" var="thread">
+							<tr>
+								<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
+								<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}"><c:out value="${thread.getAuteur()}" /></a></p></td>
+								<td class="row1" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbMsg()}" /></p></td>
+								<td class="row2" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbVues()}" /></p></td>
+							</tr>
 							</c:forEach>
-					
-					</c:otherwise>
-				
-					</c:choose>
-					<tr>
-						<td class="spacer" colspan="2" height="1"><img src="fichiers/spacer.gif" alt="" width="1" height="1" /></td>
-					</tr>
-				</table>
-	
-	
+
+						</tbody>
+					</table>
+					<br clear="all" />
 			</div>
-		
-			<br clear="all" />
+	
 			<table class="tablebg" style="margin-top: 5px;" cellspacing="1"
 				cellpadding="0" width="100%">
 				<tbody>
@@ -150,5 +125,6 @@
 			</table>
 	
 		</div>
+	
 	</body>
 </html>
