@@ -77,7 +77,7 @@ public final class DAOServlet extends HttpServlet {
 		String date = dateFormat.format(uDate);
 
 		PreparedStatement stat3 = connexion
-				.prepareStatement("INSERT INTO UTILISATEURS(login,password, signup) VALUES(?,?,?)");
+				.prepareStatement("INSERT INTO UTILISATEURS(login, password, signup) VALUES(?,?,?)");
 		stat3.setString(1, user);
 		stat3.setString(2, pass);
 		stat3.setString(3, date);
@@ -223,7 +223,7 @@ public final class DAOServlet extends HttpServlet {
 	}
 
 	public int getPostsUser(String auteur) throws SQLException {
-		String sqlAuteurId = "SELECT posts FROM Utilisateurs WHERE id=?";
+		String sqlAuteurId = "SELECT posts FROM Utilisateurs WHERE login=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
 		statAut.setString(1, auteur);
 		ResultSet res = statAut.executeQuery();
@@ -310,7 +310,7 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
-	private int getIdAuteur(String auteur) throws SQLException {
+	public int getIdAuteur(String auteur) throws SQLException {
 		String sqlAuteurId = "SELECT id FROM Utilisateurs WHERE login=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
 		statAut.setString(1, auteur);
@@ -353,23 +353,16 @@ public final class DAOServlet extends HttpServlet {
 	}
 
 	public void updateNbPosts(String auteur) throws SQLException {
-		String sqlAuteurId = "SELECT id FROM Utilisateurs WHERE login=?";
-		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
-		statAut.setString(1, auteur);
-		ResultSet res = statAut.executeQuery();
-		if (res.next()) {
-			int id = res.getInt("id");
-			int nbPosts = countMessagesAuteur(id);
+		int id = getIdAuteur(auteur);
+		int nbPosts = countMessagesAuteur(id);
 
-			String sql = "UPDATE Utilisateurs SET posts=? WHERE id=?";
-			PreparedStatement stat = connexion.prepareStatement(sql);
-			stat.setInt(1, nbPosts);
-			stat.setInt(2, id);
-			stat.executeUpdate();
-			stat.close();
-			res.close();
-			statAut.close();
-		}
+		String sql = "UPDATE Utilisateurs SET posts=? WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, nbPosts);
+		stat.setInt(2, id);
+		stat.executeUpdate();
+
+		stat.close();
 	}
 
 	public String getTexte(int idMsg) throws SQLException {
@@ -464,8 +457,9 @@ public final class DAOServlet extends HttpServlet {
 			int id = res.getInt("id");
 			int nbPosts = res.getInt("posts");
 			String signup = res.getString("signup");
+			String avatar = res.getString("avatar");
 
-			user = new Utilisateur(login, password, id, nbPosts, signup);
+			user = new Utilisateur(login, password, id, nbPosts, signup, avatar);
 		}
 
 		return user;
@@ -474,6 +468,16 @@ public final class DAOServlet extends HttpServlet {
 	public Utilisateur getUser(String idUser) throws SQLException {
 		int user = getIdAuteur(idUser);
 		return getUser(user);
+	}
+	
+	public void updateAvatar(String user, String avatar) throws SQLException {
+		String sql = "UPDATE Utilisateurs SET avatar=? WHERE login=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setString(1, avatar);
+		stat.setString(2, user);
+		stat.executeUpdate();
+		
+		stat.close();
 	}
 
 }

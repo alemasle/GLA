@@ -24,7 +24,8 @@
 								<p class="breadcrumbs">
 
 								<c:choose>
-									<c:when test="${ sess }"> <b><c:out value="${ user }" /></b>
+									<c:when test="${ sess }">
+										<a href="/forum/profil?login=${user}"><b><c:out value="${ user }" /></b></a>&nbsp;
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
 									</c:when>
 									
@@ -43,8 +44,23 @@
 				<br clear="all" />	
 					<table cellspacing="1" width="100%">
 						<tbody>
+							
 							<tr>
-								<img src="fichiers/${login}.jpg" alt="${image} picture" height="5%" width="5%"/>							
+								<td>
+									Photo de profil <b><c:out value="${login}"></c:out></b>:<br />
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<img src="fichiers/${avatar}" alt="${login} has no picture" height="7%" width="7%"/>
+								</td>
+								<c:if test="${sess}">
+									<td valign="top" align="right">
+									 	<a href="/forum/uploadavatar"><u>Change your avatar</u></a>
+									</td>
+								</c:if>
+								
 							</tr>
 							<tr>
 								<td valign="middle" align="left">
@@ -57,7 +73,7 @@
 										<a href="/forum/newthread">
 											<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
 										</a>
-									</c:if>						
+									</c:if>			
 								
 								</td>
 							</tr>
@@ -67,10 +83,8 @@
 									<br />
 									<b>Inscription: </b><c:out value="${utilisateur.getSignUp()}" />
 								</td>
-<!-- 								<td> -->
-									
-<!-- 								</td> -->
 							</tr>
+							
 						</tbody>
 					</table>
 	

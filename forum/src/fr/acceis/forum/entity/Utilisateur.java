@@ -12,12 +12,15 @@ public class Utilisateur {
 
 	private String signup;
 
-	public Utilisateur(String login, String password, int id, int nbPosts, String signup) {
+	private String avatar;
+
+	public Utilisateur(String login, String password, int id, int nbPosts, String signup, String avatar) {
 		this.login = login;
 		this.password = password;
 		this.id = id;
 		this.nbPosts = nbPosts;
 		this.signup = signup;
+		this.avatar = avatar;
 	}
 
 	public String getLogin() {
@@ -38,5 +41,9 @@ public class Utilisateur {
 
 	public String getSignUp() {
 		return signup;
+	}
+
+	public String getAvatar() {
+		return avatar;
 	}
 }

@@ -25,7 +25,8 @@
 								<p class="breadcrumbs">
 								
 								<c:choose>
-									<c:when test="${ sess }"> <b><c:out value="${ user }" /></b>
+									<c:when test="${ sess }"> 
+										<a href="/forum/profil?login=${user}"><b><c:out value="${ user }" /></b></a>&nbsp;
 										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
 									</c:when>
 									
