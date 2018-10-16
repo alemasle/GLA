@@ -94,5 +94,14 @@
 		<servlet-name>UploadAvatar</servlet-name>
 		<url-pattern>/uploadavatar</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DeleteMessage</servlet-name>
+		<servlet-class>fr.acceis.forum.servlet.DeleteMessageServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DeleteMessage</servlet-name>
+		<url-pattern>/deletemessage</url-pattern>
+	</servlet-mapping>
 
 </web-app>

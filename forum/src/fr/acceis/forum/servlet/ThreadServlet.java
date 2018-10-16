@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import fr.acceis.forum.entity.PairNbPostMessage;
+import fr.acceis.forum.entity.Message;
 
 public class ThreadServlet extends HttpServlet {
 
@@ -25,7 +25,7 @@ public class ThreadServlet extends HttpServlet {
 				dao = DAOServlet.getDAO();
 				int threadId = Integer.parseInt(req.getParameter("id"));
 				dao.incrementeVues(threadId);
-				List<PairNbPostMessage> messages = dao.getThreadMessages(threadId);
+				List<Message> messages = dao.getThreadMessages(threadId);
 
 				req.setAttribute("messages", messages);
 				session.setAttribute("idThread", threadId);
@@ -33,7 +33,6 @@ public class ThreadServlet extends HttpServlet {
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 	}

@@ -20,23 +20,30 @@ public class SignUpServlet extends HttpServlet {
 		String user = req.getParameter("username");
 		String pass = req.getParameter("password");
 
-		DAOServlet dao;
-		try {
-			dao = DAOServlet.getDAO();
-			if (dao.addUser(user, pass)) {
-				System.out.println("--> " + user + " has signed up");
-				HttpSession session = req.getSession();
-				session.setAttribute("sess", true);
-				session.setAttribute("user", user);
-				resp.sendRedirect("/forum/home");
-			} else {
-				System.out.println("Fail to create user!");
-				req.setAttribute("user", "invite");
-				req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
-			}
+		if ("".compareTo(user) == 0 || "".compareTo(pass) == 0) {
+			System.out.println("Fields empty");
+			req.setAttribute("error", "emptyfields");
+			req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
+		} else {
 
-		} catch (Exception e) {
-			e.printStackTrace();
+			DAOServlet dao;
+			try {
+				dao = DAOServlet.getDAO();
+				if (dao.addUser(user, pass)) {
+					System.out.println("--> " + user + " has signed up");
+					HttpSession session = req.getSession();
+					session.setAttribute("sess", true);
+					session.setAttribute("user", user);
+					resp.sendRedirect("/forum/home");
+				} else {
+					System.out.println("Fail to create user!");
+					req.setAttribute("error", "exist");
+					req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

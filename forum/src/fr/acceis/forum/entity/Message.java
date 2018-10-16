@@ -4,7 +4,7 @@ public class Message {
 
 	private int id;
 
-	private String auteur;
+	private Utilisateur auteur;
 
 	private String texte;
 
@@ -16,7 +16,7 @@ public class Message {
 
 	private boolean edited;
 
-	public Message(int id, String auteur, int idThread, String texte, String threadName, String date, boolean edited) {
+	public Message(int id, Utilisateur auteur, int idThread, String texte, String threadName, String date, boolean edited) {
 		this.id = id;
 		this.auteur = auteur;
 		this.texte = texte;
@@ -35,7 +35,7 @@ public class Message {
 		return id;
 	}
 
-	public String getAuteur() {
+	public Utilisateur getAuteur() {
 		return auteur;
 	}
 

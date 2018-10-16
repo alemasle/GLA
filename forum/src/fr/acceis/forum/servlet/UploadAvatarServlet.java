@@ -2,7 +2,6 @@ package fr.acceis.forum.servlet;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -44,20 +42,26 @@ public class UploadAvatarServlet extends HttpServlet {
 			if (!items.isEmpty()) {
 				FileItem fi = items.get(0);
 
-				String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
-				String[] tabName = fi.getName().split("\\.");
-				
-				for (String string : tabName) {
-					System.out.println(string);
+				if ("".compareTo(fi.getName()) == 0) {
+					System.out.println("Fields empty");
+					req.setAttribute("error", "emptyfields");
+					req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
+				} else {
+
+					String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
+					String[] tabName = fi.getName().split("\\.");
+
+					String fileName = user + "." + tabName[tabName.length - 1];
+
+					File file = new File(path + fileName);
+					fi.write(file);
+					System.out.println("\"" + user + "\" --> uploaded a new avatar:" + fileName);
+
+					dao.updateAvatar(user, fileName);
+					req.getSession().setAttribute("avatar", dao.getAvatar(user));
+
+					resp.sendRedirect("/forum/profil?login=" + user);
 				}
-
-				String fileName = user + "." + tabName[tabName.length - 1];
-
-				System.out.println(path + fileName);
-				File file = new File(path + fileName);
-				fi.write(file);
-				
-				dao.updateAvatar(user, fileName);
 
 			}
 
@@ -65,7 +69,6 @@ public class UploadAvatarServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		resp.sendRedirect("/forum/profil?login=" + user);
 	}
 
 }

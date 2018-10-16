@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import fr.acceis.forum.entity.Utilisateur;
+
 public class LoginServlet extends HttpServlet {
 
 	@Override
@@ -20,25 +22,34 @@ public class LoginServlet extends HttpServlet {
 		String user = req.getParameter("username");
 		String pass = req.getParameter("password");
 
-		DAOServlet dao;
-		try {
-			dao = DAOServlet.getDAO();
-			if (dao.checkUser(user, pass)) {
+		if ("".compareTo(user) == 0 || "".compareTo(pass) == 0) {
+			System.out.println("Fields empty");
+			req.setAttribute("error", "emptyfields");
+			req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+		} else {
 
-				HttpSession session = req.getSession();
-				session.setAttribute("sess", true);
-				session.setAttribute("user", user);
-				resp.sendRedirect("/forum/home");
-				System.out.println("--> " + user + " connection success");
-			} else {
-				req.setAttribute("user", "invite");
-				req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-				System.out.println("--> " + user + " connection failed");
+			DAOServlet dao;
+			try {
+				dao = DAOServlet.getDAO();
+				if (dao.checkUser(user, pass)) {
+
+					Utilisateur u = dao.getUser(user);
+					HttpSession session = req.getSession();
+					session.setAttribute("sess", true);
+					session.setAttribute("user", user);
+					session.setAttribute("utilisateur", u);
+					resp.sendRedirect("/forum/home");
+					System.out.println("--> " + user + " : " + u.getRole().getRole() + " -- connection success");
+				} else {
+					req.setAttribute("error", "invite");
+					req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+					System.out.println("--> " + user + " connection failed");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
+		}
 	}
 
 }

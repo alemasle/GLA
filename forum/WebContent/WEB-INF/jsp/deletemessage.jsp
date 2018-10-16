@@ -5,7 +5,7 @@
 	lang="en-gb">
 <head>
 
-<title>LOGIN</title>
+<title>Delete message</title>
 
 <link rel="stylesheet" href="fichiers/style.css" type="text/css" />
 </head>
@@ -34,7 +34,7 @@
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tbody>
 					<tr>
-						<th colspan="2">Sign Up</th>
+						<th colspan="2">New Thread</th>
 					</tr>
 
 					<tr>
@@ -44,30 +44,17 @@
 								align="center">
 								<tbody>
 									<tr>
-										<td valign="top"><b class="gensmall">Login :</b></td>
-										<td><input class="post" name="username" size="25"
-											tabindex="1" type="text" placeholder="Username" required /></td>
-									</tr>
-									<tr>
-										<td valign="top"><b class="gensmall">Mot de passe:</b></td>
-										<td><input class="post" name="password" size="25"
-											tabindex="2" type="password" placeholder="Password" required/></td>
+										<td valign="top"><b class="gensmall">User Password:</b></td>
+										<td><input class="post" name="password" size="25" tabindex="1" type="password" placeholder="Password" required /></td>
 									</tr>
 									
-									<c:if test="${ error == 'exist'}">
-									<tr>
-										<td></td>
-										<td style="color:#FF0000">Username already taken!</td>
-									</tr>
+									<c:if test="${error == 'invalide'}">
+										<tr>
+											<td></td>
+											<td style="color:#FF0000">Identifiants invalide</td>
+										</tr>
 									</c:if>
-									
-									<c:if test="${ error == 'emptyfields'}">
-									<tr>
-										<td></td>
-										<td style="color:#FF0000">You can not submit empty fields</td>
-									</tr>
-									</c:if>
-									
+
 								</tbody>
 							</table>
 						</td>
@@ -75,7 +62,7 @@
 
 					<tr>
 						<td class="cat" colspan="2" align="center">
-							<input name="login" class="btnmain" value="Sign Up" tabindex="5" type="submit" />
+							<input name="deleteMessage" class="btnmain" value="Delete" tabindex="5" type="submit" />
 						</td>
 					</tr>
 				</tbody>

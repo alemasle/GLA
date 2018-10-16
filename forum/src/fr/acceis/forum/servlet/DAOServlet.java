@@ -13,9 +13,13 @@ import java.util.List;
 import javax.servlet.http.HttpServlet;
 
 import fr.acceis.forum.entity.Message;
-import fr.acceis.forum.entity.PairNbPostMessage;
 import fr.acceis.forum.entity.Thread;
 import fr.acceis.forum.entity.Utilisateur;
+import roles.Administrateur;
+import roles.Invite;
+import roles.Moderateur;
+import roles.Role;
+import roles.User;
 
 public final class DAOServlet extends HttpServlet {
 
@@ -173,9 +177,8 @@ public final class DAOServlet extends HttpServlet {
 	 * @return The list of message linked to the same Thread (idThread)
 	 * @throws SQLException
 	 */
-	public List<PairNbPostMessage> getThreadMessages(int idThread) throws SQLException {
-		List<PairNbPostMessage> msg = new ArrayList<PairNbPostMessage>();
-
+	public List<Message> getThreadMessages(int idThread) throws SQLException {
+		List<Message> msg = new ArrayList<Message>();
 		String sql = "SELECT * FROM Messages WHERE idThread=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		stat.setInt(1, idThread);
@@ -183,39 +186,27 @@ public final class DAOServlet extends HttpServlet {
 
 		while (res.next()) {
 			int id = res.getInt("id");
-			int auteur = res.getInt("auteur");
+			Utilisateur auteur = getUser(res.getInt("auteur"));
 			int idThr = res.getInt("idThread");
 			String texte = res.getString("texte");
 			String date = res.getString("date");
 			boolean edited = res.getBoolean("edited");
 
-			String sqlAut = "SELECT login FROM Utilisateurs WHERE id=?";
-			PreparedStatement aut = connexion.prepareStatement(sqlAut);
-			aut.setInt(1, auteur);
-			ResultSet resAut = aut.executeQuery();
-			while (resAut.next()) {
-				String auteurMsg = resAut.getString("login");
+			String sqlName = "SELECT name FROM Threads WHERE id=?";
+			PreparedStatement nameReq = connexion.prepareStatement(sqlName);
+			nameReq.setInt(1, idThread);
+			ResultSet resName = nameReq.executeQuery();
 
-				String sqlName = "SELECT name FROM Threads WHERE id=?";
-				PreparedStatement nameReq = connexion.prepareStatement(sqlName);
-				nameReq.setInt(1, idThread);
-				ResultSet resName = nameReq.executeQuery();
+			while (resName.next()) {
 
-				while (resName.next()) {
+				String name = resName.getString("name");
+				Message m = new Message(id, auteur, idThr, texte, name, date, edited);
 
-					String name = resName.getString("name");
-					Message m = new Message(id, auteurMsg, idThr, texte, name, date, edited);
-					int posts = getPostsUser(auteurMsg);// countMessagesUser(auteur);
-
-					PairNbPostMessage p = new PairNbPostMessage(m, posts);
 //					System.out.println(m.toString());
-					msg.add(p);
-				}
-				nameReq.close();
-				resName.close();
+				msg.add(m);
 			}
-			aut.close();
-			resAut.close();
+			nameReq.close();
+			resName.close();
 		}
 		stat.close();
 		res.close();
@@ -458,8 +449,30 @@ public final class DAOServlet extends HttpServlet {
 			int nbPosts = res.getInt("posts");
 			String signup = res.getString("signup");
 			String avatar = res.getString("avatar");
+			String roleTmp = res.getString("role");
+			Role role;
+			switch (roleTmp) {
+			case "Administrateur":
+				role = new Administrateur();
+				break;
+			case "Invite":
+				role = new Invite();
+				break;
+			case "User":
+				role = new User();
+				break;
 
-			user = new Utilisateur(login, password, id, nbPosts, signup, avatar);
+			case "Moderateur":
+				role = new Moderateur();
+				break;
+
+			default:
+				role = new Invite();
+				break;
+			}
+//			Role role = new Administrateur();
+
+			user = new Utilisateur(login, password, id, nbPosts, signup, avatar, role);
 		}
 
 		return user;
@@ -469,15 +482,44 @@ public final class DAOServlet extends HttpServlet {
 		int user = getIdAuteur(idUser);
 		return getUser(user);
 	}
-	
+
 	public void updateAvatar(String user, String avatar) throws SQLException {
 		String sql = "UPDATE Utilisateurs SET avatar=? WHERE login=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		stat.setString(1, avatar);
 		stat.setString(2, user);
 		stat.executeUpdate();
-		
+
 		stat.close();
 	}
 
+	public String getAvatar(String user) throws SQLException {
+		int id = getIdAuteur(user);
+		return getAvatar(id);
+	}
+
+	public String getAvatar(int id) throws SQLException {
+		String sqlThreadsId = "SELECT avatar FROM Utilisateurs WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setInt(1, id);
+		ResultSet res = statAut.executeQuery();
+		String path = "default.jpg";
+
+		if (res.next()) {
+			path = res.getString("avatar");
+		}
+
+		res.close();
+		statAut.close();
+		return path;
+	}
+
+	public void deleteMessage(int idMsg) throws SQLException {
+		String sql = "DELETE FROM Messages WHERE id=?";
+		PreparedStatement stat = connexion.prepareStatement(sql);
+		stat.setInt(1, idMsg);
+		stat.executeUpdate();
+
+		stat.close();
+	}
 }

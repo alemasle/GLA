@@ -46,18 +46,25 @@
 									<tr>
 										<td valign="top"><b class="gensmall">Login :</b></td>
 										<td><input class="post" name="username" size="25"
-											tabindex="1" type="text" placeholder="Username"/></td>
+											tabindex="1" type="text" placeholder="Username" required /></td>
 									</tr>
 									<tr>
 										<td valign="top"><b class="gensmall">Mot de passe:</b></td>
 										<td><input class="post" name="password" size="25"
-											tabindex="2" type="password" placeholder="Password"/></td>
+											tabindex="2" type="password" placeholder="Password" required /></td>
 									</tr>
 									
-									<c:if test="${user == 'invite'}">
+									<c:if test="${error == 'invite'}">
+										<tr>
+											<td></td>
+											<td style="color:#FF0000">Identifiants invalide</td>
+										</tr>
+									</c:if>
+									
+									<c:if test="${error == 'emptyfields'}">
 									<tr>
 										<td></td>
-										<td style="color:#FF0000">Identifiants invalide</td>
+										<td style="color:#FF0000">You can not submit empty fields</td>
 									</tr>
 									</c:if>
 

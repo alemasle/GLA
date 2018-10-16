@@ -24,14 +24,12 @@ public class ProfilServlet extends HttpServlet {
 				resp.sendRedirect("/forum/home");
 			} else {
 
-				Utilisateur user = dao.getUser(login);
-				String avatar = user.getAvatar();
+				Utilisateur profil = dao.getUser(login);
 
 				List<Thread> lthread = dao.getThreadUser(login);
 				req.setAttribute("threads_answered", lthread);
 				req.setAttribute("login", login);
-				req.setAttribute("utilisateur", user);
-				req.setAttribute("avatar", avatar);
+				req.setAttribute("userProfil", profil);
 				req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {

@@ -44,9 +44,14 @@
 								<tbody>
 									<tr>
 										<td valign="top"><b class="gensmall"> <c:out value="${user}"/> nouvel avatar:</b></td>
-										<td><input class="post" name="avatar" type="file" enctype="multipart/form-data" /></td>
+										<td><input class="post" name="avatar" type="file" accept="image/*" required/></td>
 									</tr>
-
+									<c:if test="${ error == 'emptyfields'}">
+										<tr>
+											<td></td>
+											<td style="color:#FF0000">You can not submit empty fields</td>
+										</tr>
+									</c:if>
 								</tbody>
 							</table>
 						</td>

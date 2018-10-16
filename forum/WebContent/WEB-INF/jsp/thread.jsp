@@ -67,65 +67,83 @@
 						</td>
 					</c:when>
 					
-					<c:otherwise>
-						<c:forEach items="${messages}" var="message">
-								<tbody>
-									<tr class="row2">
-										<td valign="middle" align="center"><b class="postauthor"><a class="username-coloured" href="/forum/profil?login=${message.getMessage().getAuteur()}"><c:out value="${message.getMessage().getAuteur()}" /> </a></b></td>
-										<td width="100%" height="25">
-											<table cellspacing="0" width="100%">
-												<tbody>
-													<tr>
-														<td class="gensmall" width="100%">
-															<div style="float: left;">&nbsp;
-																<b><c:out value="${message.getMessage().getThreadName()}" />:</b>
-															</div>
-															<div style="float: right;">
-															<c:if test="${message.getMessage().getEdited()}">
-																<span class="postdetails"> <b>(Edited)</b></span>
-															</c:if>
-																<b>Posted:</b> <c:out value="${message.getMessage().getDate()}" />&nbsp;
-															</div>
-														</td>
-													</tr>								
-												</tbody>
-											</table>
-										</td>
-									</tr>
-								</tbody>
-								
+				<c:otherwise>
+					<c:forEach items="${messages}" var="message">
+							<tbody>
 								<tr class="row2">
-				
-									<td class="profile" valign="top">
-										<table cellspacing="4" align="center" width="150">
-				
-										</table> 
-										<span class="postdetails"> <b>Posts:</b> <c:out value="${message.getNbPosts()}" /></span>
-										<br />
-										<span><a href="/forum/editpost?id=${message.getMessage().getId()}"><b><u>Editer</u></b></a></span>
-				
-									</td>
-									<td valign="top">
-										<table cellspacing="5" width="100%">
+									<td valign="middle" align="center"><b class="postauthor"><a class="username-coloured" href="/forum/profil?login=${message.getAuteur().getLogin()}"><c:out value="${message.getAuteur().getLogin()}" /> </a></b></td>
+									<td width="100%" height="25">
+										<table cellspacing="0" width="100%">
 											<tbody>
 												<tr>
-													<td>
-														<div class="postbody" style="word-break:break-all;"><c:out value="${message.getMessage().getTexte()}" /></div>
-														<br clear="all" /><br />
-														<table cellspacing="0" width="100%">
-															<tbody>
-																<tr valign="middle">
-																	<td class="gensmall" align="right"></td>
-																</tr>
-															</tbody>
-														</table>
+													<td class="gensmall" width="100%">
+														<div style="float: left;">&nbsp;
+															<b><c:out value="${message.getThreadName()}" />:</b>
+														</div>
+														<div style="float: right;">
+														<c:if test="${message.getEdited()}">
+															<span class="postdetails"> <b>(Edited)</b></span>
+														</c:if>
+															<b>Posted:</b> <c:out value="${message.getDate()}" />&nbsp;
+														</div>
 													</td>
-												</tr>
+												</tr>								
 											</tbody>
 										</table>
 									</td>
 								</tr>
-							</c:forEach>
+							</tbody>
+							
+							<tr class="row2">
+			
+								<td class="profile" valign="top">
+									<table colspan="2" cellspacing="4" align="center" width="100">
+										<tr>
+											<td align="left">
+												<img src="fichiers/${message.getAuteur().getAvatar()}" alt="${login} has no picture" height="55%" width="55%"/>
+											</td>
+										</tr>
+										<tr>
+											<td class="postdetails"> <b>Posts:&nbsp;</b><c:out value="${message.getAuteur().getNbPosts()}" /></td>
+										</tr>
+										
+										<c:if test="${(user == message.getAuteur().getLogin() and (message.getAuteur().getRole().editMessage())) or (utilisateur.getRole().editAllMessage()) }">
+											<tr>
+												<td valign="bottom">
+													<a href="/forum/editpost?id=${message.getId()}"><b><u>Editer</u></b></a>
+												</td>
+											</tr>
+											<tr>
+												<td valign="top">
+													<a href="/forum/deletemessage?id=${message.getId()}"><b><u>Supprimer</u></b></a>
+												</td>
+											</tr>
+										</c:if>
+											
+									</table> 
+								</td>
+								
+								<td valign="top">
+									<table cellspacing="5" width="100%">
+										<tbody>
+											<tr>
+												<td>
+													<div class="postbody" style="word-break:break-all;"><c:out value="${message.getTexte()}" /></div>
+													<br clear="all" /><br />
+													<table cellspacing="0" width="100%">
+														<tbody>
+															<tr valign="middle">
+																<td class="gensmall" align="right"></td>
+															</tr>
+														</tbody>
+													</table>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						</c:forEach>
 					
 					</c:otherwise>
 				
