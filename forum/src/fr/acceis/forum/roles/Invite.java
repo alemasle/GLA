@@ -1,6 +1,6 @@
-package roles;
+package fr.acceis.forum.roles;
 
-public class User implements Role {
+public class Invite implements Role {
 
 	@Override
 	public boolean readThread() {
@@ -9,37 +9,36 @@ public class User implements Role {
 
 	@Override
 	public boolean writeMessage() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean readProfil() {
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean deleteMessage() {
-		return true;
-	}
-
-	@Override
-	public boolean deleteAllMessage() {
 		return false;
 	}
 
 	@Override
 	public boolean editMessage() {
-		return true;
-	}
-
-	@Override
-	public boolean editAllMessage() {
 		return false;
 	}
 
 	@Override
 	public String getRole() {
-		return "User";
+		return "Invite";
 	}
 
+	@Override
+	public boolean deleteAllMessages() {
+		return false;
+	}
+
+	@Override
+	public boolean editAllMessages() {
+		return false;
+	}
 }

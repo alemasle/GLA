@@ -1,6 +1,6 @@
-package roles;
+package fr.acceis.forum.roles;
 
-public class Administrateur implements Role {
+public class Moderateur implements Role {
 
 	@Override
 	public boolean readThread() {
@@ -29,16 +29,16 @@ public class Administrateur implements Role {
 
 	@Override
 	public String getRole() {
-		return "Administrateur";
+		return "Moderateur";
 	}
-
+	
 	@Override
-	public boolean deleteAllMessage() {
+	public boolean deleteAllMessages() {
 		return true;
 	}
 
 	@Override
-	public boolean editAllMessage() {
+	public boolean editAllMessages() {
 		return true;
 	}
 

@@ -1,4 +1,4 @@
-package roles;
+package fr.acceis.forum.roles;
 
 public interface Role {
 
@@ -9,13 +9,13 @@ public interface Role {
 	boolean readProfil();
 
 	boolean deleteMessage();
-	
-	boolean deleteAllMessage();
-	
+
+	boolean deleteAllMessages();
+
 	boolean editMessage();
-	
-	boolean editAllMessage();
-	
+
+	boolean editAllMessages();
+
 	String getRole();
 
 }

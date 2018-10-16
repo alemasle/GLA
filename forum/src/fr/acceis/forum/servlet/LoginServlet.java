@@ -9,12 +9,28 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import fr.acceis.forum.entity.Utilisateur;
+import fr.acceis.forum.roles.Invite;
+import fr.acceis.forum.roles.Role;
 
 public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+		HttpSession session = req.getSession(false);
+		String user = (String) session.getAttribute("user");
+		
+		if (session.getAttribute("user") == null) {
+			session.setAttribute("user", "invite");
+			Role role = new Invite();
+			Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
+			session.setAttribute("utilisateur", invite);
+		}
+		
+		if ("invite".compareTo(user) != 0) {
+			resp.sendRedirect("/forum/home");
+		} else {
+			req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
+		}
 	}
 
 	@Override
@@ -39,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
 					resp.sendRedirect("/forum/home");
-					System.out.println("--> " + user + " : " + u.getRole().getRole() + " -- connection success");
+					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success (" + req.getRemoteAddr() + ")" );
 				} else {
 					req.setAttribute("error", "invite");
 					req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);

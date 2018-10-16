@@ -73,11 +73,14 @@
 										<tr>
 											<th colspan="2">Informations</th>
 										</tr>
-										<td valign="middle" align="left">
-											<b>Username: </b> <c:out value="${login}" /> <br />
-											<b>Nombre de posts: </b><c:out value="${userProfil.getNbPosts()}" /> <br />
-											<b>Inscription: </b><c:out value="${userProfil.getSignUp()}" />
-										</td>
+										<tr>
+											<td valign="middle" align="left">
+												<b>Username: </b> <c:out value="${login}" /> <br />
+												<b>Nombre de posts: </b><c:out value="${userProfil.getNbPosts()}" /> <br />
+												<b>Inscription: </b><c:out value="${userProfil.getSignUp()}" />
+											</td>
+										</tr>
+										
 									</tbody>
 								</table>
 							</tr>							
@@ -107,7 +110,18 @@
 									<c:forEach items="${threads_answered}" var="thread">
 										<tr>
 											<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
-											<td class="row2" align="center" width="130"><p class="topicauthor"><a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}"><c:out value="${thread.getAuteur()}" /></a></p></td>
+											<td class="row2" align="center" width="130">
+												<p class="topicauthor">
+													<c:choose>
+														<c:when test="${user == thread.getAuteur() or (utilisateur.getRole().readProfil())}">
+													<a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}"><c:out value="${thread.getAuteur()}" /></a>
+														</c:when>
+														<c:otherwise>
+															<c:out value="${thread.getAuteur()}" />
+														</c:otherwise>
+													</c:choose>
+												</p>
+											</td>
 											<td class="row1" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbMsg()}" /></p></td>
 											<td class="row2" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbVues()}" /></p></td>
 										</tr>

@@ -1,6 +1,6 @@
 package fr.acceis.forum.entity;
 
-import roles.Role;
+import fr.acceis.forum.roles.Role;
 
 public class Utilisateur {
 

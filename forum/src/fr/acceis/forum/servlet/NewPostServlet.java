@@ -10,23 +10,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import fr.acceis.forum.entity.Utilisateur;
+
 public class NewPostServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
-		if (session.getAttribute("user") == null) {
+		String user = (String) session.getAttribute("user");
+
+		if (user == null || ("invite".compareTo(user) == 0)) {
 			resp.sendRedirect("/forum/home");
 		} else {
-			DAOServlet dao;
-			try {
-				dao = DAOServlet.getDAO();
-				int idThread = (int) req.getSession().getAttribute("idThread");
-				dao.decrementeVues(idThread);
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
+			Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
+			if (!utilisateur.getRole().writeMessage()) {
+				resp.sendRedirect("/forum/home");
+			} else {
+				DAOServlet dao;
+				try {
+					dao = DAOServlet.getDAO();
+					int idThread = (int) req.getSession().getAttribute("idThread");
+					dao.decrementeVues(idThread);
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+					e.printStackTrace();
+				}
+
+				req.getRequestDispatcher("/WEB-INF/jsp/newpost.jsp").forward(req, resp);
 			}
-			req.getRequestDispatcher("/WEB-INF/jsp/newpost.jsp").forward(req, resp);
 		}
 
 	}

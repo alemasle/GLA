@@ -85,12 +85,28 @@
 
 							<c:forEach items="${threads}" var="thread">
 								<tr>
-									<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
+									<td class="row1">
+										<c:choose>
+											<c:when test="${utilisateur.getRole().readThread()}">
+												<a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}" /></a>
+											</c:when>
+											<c:otherwise>
+												<c:out value="${thread.getName()}" />
+											</c:otherwise>
+										</c:choose>
+									</td>
 									<td class="row2" align="center" width="130">
 										<p class="topicauthor">
-											<a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}">
-												<c:out value="${thread.getAuteur()}" />
-											</a>
+											<c:choose>
+												<c:when	test="${user == thread.getAuteur() or (utilisateur.getRole().readProfil())}">
+													<a class="username-coloured"
+														href="/forum/profil?login=${thread.getAuteur()}"><c:out
+															value="${thread.getAuteur()}" /></a>
+												</c:when>
+												<c:otherwise>
+													<c:out value="${thread.getAuteur()}" />
+												</c:otherwise>
+											</c:choose>
 										</p>
 									</td>
 									<td class="row1" align="center" width="50"><p class="topicdetails"><c:out value="${thread.getNbMsg()}" /></p></td>

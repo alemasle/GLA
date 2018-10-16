@@ -15,11 +15,11 @@ import javax.servlet.http.HttpServlet;
 import fr.acceis.forum.entity.Message;
 import fr.acceis.forum.entity.Thread;
 import fr.acceis.forum.entity.Utilisateur;
-import roles.Administrateur;
-import roles.Invite;
-import roles.Moderateur;
-import roles.Role;
-import roles.User;
+import fr.acceis.forum.roles.Administrateur;
+import fr.acceis.forum.roles.Invite;
+import fr.acceis.forum.roles.Moderateur;
+import fr.acceis.forum.roles.Role;
+import fr.acceis.forum.roles.User;
 
 public final class DAOServlet extends HttpServlet {
 
@@ -451,13 +451,12 @@ public final class DAOServlet extends HttpServlet {
 			String avatar = res.getString("avatar");
 			String roleTmp = res.getString("role");
 			Role role;
+
 			switch (roleTmp) {
 			case "Administrateur":
 				role = new Administrateur();
 				break;
-			case "Invite":
-				role = new Invite();
-				break;
+
 			case "User":
 				role = new User();
 				break;

@@ -106,13 +106,15 @@
 										<tr>
 											<td class="postdetails"> <b>Posts:&nbsp;</b><c:out value="${message.getAuteur().getNbPosts()}" /></td>
 										</tr>
-										
-										<c:if test="${(user == message.getAuteur().getLogin() and (message.getAuteur().getRole().editMessage())) or (utilisateur.getRole().editAllMessage()) }">
+
+										<c:if test="${user == message.getAuteur().getLogin() and (message.getAuteur().getRole().editMessage()) or (utilisateur.getRole().editAllMessages()) }">
 											<tr>
 												<td valign="bottom">
 													<a href="/forum/editpost?id=${message.getId()}"><b><u>Editer</u></b></a>
 												</td>
 											</tr>
+										</c:if>
+										<c:if test="${user == message.getAuteur().getLogin() and (message.getAuteur().getRole().deleteMessage()) or (utilisateur.getRole().deleteAllMessages()) }">
 											<tr>
 												<td valign="top">
 													<a href="/forum/deletemessage?id=${message.getId()}"><b><u>Supprimer</u></b></a>

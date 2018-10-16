@@ -9,7 +9,7 @@ public class JeuDeTestJdBc {
 	public final static String[] QUERIES = { "drop table if exists Messages", "drop table if exists Threads",
 			"drop table if exists Utilisateurs",
 
-			"create table Utilisateurs (id integer primary key, login varchar(255) not null, password varchar(255), posts integer default 0, signup varchar(100) default 'Is born here', avatar varchar(255) default 'default.jpg', role varchar(255) default 'User')",
+			"create table Utilisateurs (id integer primary key, login varchar(255) not null, password varchar(255), posts integer default 0, signup varchar(100) default 'Was born here', avatar varchar(255) default 'default.jpg', role varchar(255) default 'User')",
 			"create table Threads (id integer, auteur integer not null, name varchar(255), vues integer default 0, primary key (id), foreign key (auteur) references Utilisateurs(id))",
 			"create table Messages (id integer, auteur integer not null, idThread integer not null, texte varchar(5000), date varchar(100), edited boolean default false, primary key (id), foreign key (idThread) references Threads(id), foreign key (auteur) references Utilisateurs(id))",
 
