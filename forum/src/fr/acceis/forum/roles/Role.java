@@ -3,6 +3,8 @@ package fr.acceis.forum.roles;
 public interface Role {
 
 	boolean readThread();
+	
+	boolean writeThread();
 
 	boolean writeMessage();
 

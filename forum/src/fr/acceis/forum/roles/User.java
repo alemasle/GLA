@@ -42,4 +42,9 @@ public class User implements Role {
 		return "User";
 	}
 
+	@Override
+	public boolean writeThread() {
+		return true;
+	}
+
 }

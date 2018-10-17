@@ -4,9 +4,7 @@
 	lang="en-gb">
 	<head>
 	
-	<title>THREAD</title>
-	
-	
+	<title>${threadName}</title>
 	
 	<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
 	
@@ -24,17 +22,17 @@
 							<td class="row1">
 								<p class="breadcrumbs">
 								
-								<c:choose>
-									<c:when test="${ sess }"> 
-										<a href="/forum/profil?login=${user}"><b><c:out value="${ user }" /></b></a>&nbsp;
-										<a href="/forum/logout" type=""> <b><u>D&eacute;connexion</u></b></a>
-									</c:when>
-									
-									<c:otherwise> Non connect&eacute; 
-										<a href="/forum/login"> <b><u>Connexion</u></b></a>
-										<a href="/forum/signup"> <b><u>Inscriptions</u></b></a>
-									</c:otherwise>
-								</c:choose>
+									<c:choose>
+										<c:when test="${ utilisateur.getRole().getRole() != 'Invite' }">
+											<a href="/forum/profil?login=${user}"><b><c:out value="${user}" /></b></a>&nbsp;
+											<a href="/forum/logout" type=""><b><u>D&eacute;connexion</u></b></a>
+										</c:when>
+										
+										<c:otherwise> Non connect&eacute;&nbsp;
+											<a href="/forum/login"><b><u>Connexion</u></b></a>&nbsp;
+											<a href="/forum/signup"><b><u>Inscriptions</u></b></a>
+										</c:otherwise>
+									</c:choose>
 								
 								</p>
 							</td>

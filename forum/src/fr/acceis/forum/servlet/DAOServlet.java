@@ -415,7 +415,7 @@ public final class DAOServlet extends HttpServlet {
 		return lth;
 	}
 
-	public String existUser(int idAut) throws SQLException {
+	public String getLogin(int idAut) throws SQLException {
 		String sqlThreadsId = "SELECT login FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
 		statAut.setInt(1, idAut);
@@ -430,9 +430,9 @@ public final class DAOServlet extends HttpServlet {
 		return log;
 	}
 
-	public String existUser(String login) throws SQLException {
+	public String getLogin(String login) throws SQLException {
 		int idAut = getIdAuteur(login);
-		return existUser(idAut);
+		return getLogin(idAut);
 	}
 
 	public Utilisateur getUser(int idUser) throws SQLException {
@@ -520,5 +520,21 @@ public final class DAOServlet extends HttpServlet {
 		stat.executeUpdate();
 
 		stat.close();
+	}
+
+	public String getThreadName(int idThread) throws SQLException {
+		String sqlThreadsId = "SELECT name FROM Threads WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setInt(1, idThread);
+		ResultSet res = statAut.executeQuery();
+		String name = "???";
+
+		if (res.next()) {
+			name = res.getString("name");
+		}
+
+		res.close();
+		statAut.close();
+		return name;
 	}
 }

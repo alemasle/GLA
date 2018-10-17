@@ -31,7 +31,7 @@ public class Moderateur implements Role {
 	public String getRole() {
 		return "Moderateur";
 	}
-	
+
 	@Override
 	public boolean deleteAllMessages() {
 		return true;
@@ -39,6 +39,11 @@ public class Moderateur implements Role {
 
 	@Override
 	public boolean editAllMessages() {
+		return true;
+	}
+
+	@Override
+	public boolean writeThread() {
 		return true;
 	}
 

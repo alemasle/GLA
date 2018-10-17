@@ -28,7 +28,6 @@ public class LogoutServlet extends HttpServlet {
 			session.setAttribute("utilisateur", invite);
 		}
 		resp.sendRedirect("/forum/home");
-//		req.getRequestDispatcher("/WEB-INF/jsp/threads.jsp").forward(req, resp);
 		System.out.println("--> " + user + " has disconnected");
 	}
 

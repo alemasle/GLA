@@ -25,32 +25,34 @@ public class ProfilServlet extends HttpServlet {
 			String login = req.getParameter("login");
 			HttpSession session = req.getSession();
 
-			if (session.getAttribute("user") == null) {
-				session.setAttribute("user", "invite");
-				Role role = new Invite();
-				Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
-				session.setAttribute("utilisateur", invite);
-				resp.sendRedirect("/forum/profil?login=" + login);
+			System.out.println("Sess user test filter: " + session.getAttribute("user"));
+//			if (session.getAttribute("user") == null) {
+//				session.setAttribute("user", "invite");
+//				Role role = new Invite();
+//				Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
+//				session.setAttribute("utilisateur", invite);
+//				resp.sendRedirect("/forum/profil?login=" + login);
+//			} else {
+
+			if (dao.getLogin(login) == null) {
+				resp.sendRedirect("/forum/home");
 			} else {
-				if (dao.existUser(login) == null) {
+
+				Utilisateur profil = dao.getUser(login);
+				Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
+
+				if (!utilisateur.getRole().readProfil()) {
 					resp.sendRedirect("/forum/home");
 				} else {
 
-					Utilisateur profil = dao.getUser(login);
-					Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
-
-					if (!utilisateur.getRole().readProfil()) {
-						resp.sendRedirect("/forum/home");
-					} else {
-
-						List<Thread> lthread = dao.getThreadUser(login);
-						req.setAttribute("threads_answered", lthread);
-						req.setAttribute("login", login);
-						req.setAttribute("userProfil", profil);
-						req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
-					}
+					List<Thread> lthread = dao.getThreadUser(login);
+					req.setAttribute("threads_answered", lthread);
+					req.setAttribute("login", login);
+					req.setAttribute("userProfil", profil);
+					req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
 				}
 			}
+//			}
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

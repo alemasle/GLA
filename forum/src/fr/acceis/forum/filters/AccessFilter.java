@@ -12,17 +12,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import fr.acceis.forum.controlAccessManager.ControleAccessManager;
 import fr.acceis.forum.entity.Utilisateur;
 import fr.acceis.forum.roles.Invite;
 import fr.acceis.forum.roles.Role;
 
 public class AccessFilter implements Filter {
 
+	private final String LOGIN = "/forum/login";
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		if (filterConfig == null) {
-			System.out.println("Erreur config");
-		}
+//		if (filterConfig == null) {
+//			System.out.println("Erreur config");
+//		}
 
 	}
 
@@ -34,28 +37,25 @@ public class AccessFilter implements Filter {
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpSession session = req.getSession();
 
-		if (session.getAttribute("user") == null) {
-			System.out.println("INIT invite");
+		if (session.getAttribute("user") == null || session.getAttribute("utilisateur") == null) {
 			session.setAttribute("user", "invite");
 			Role role = new Invite();
-			Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
+			Utilisateur invite = new Utilisateur("invite", "", 0, -1, "", "", role);
 			session.setAttribute("utilisateur", invite);
-
-		} else if ("invite".compareTo((String) session.getAttribute("user")) != 0) {
-			session.removeAttribute("idThread");
 		}
 
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
-		String uri = req.getRequestURI();
+		String path = req.getServletPath();
 
-		String name = utilisateur.getLogin();
-		System.out.println(name + " demande " + uri);
+		if (path.startsWith("/")) {
+			path = path.substring(1);
+		}
 
-//		if (authorized(utilisateur, uri)) {
-		chain.doFilter(request, response);
-//		} else {
-//			resp.sendRedirect("/forum/home");
-//		}
+		if (ControleAccessManager.autorize(utilisateur, path)) {
+			chain.doFilter(request, response);
+		} else {
+			resp.sendRedirect("/forum/home");
+		}
 	}
 
 	@Override

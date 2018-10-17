@@ -47,7 +47,7 @@ public class JeuDeTestJdBc {
 		int[] a = { 1, 2, 3 };
 
 		for (int i : a) {
-			String aut = dao.existUser(i);
+			String aut = dao.getLogin(i);
 			dao.updateNbPosts(aut);
 		}
 

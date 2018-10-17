@@ -41,4 +41,9 @@ public class Invite implements Role {
 	public boolean editAllMessages() {
 		return false;
 	}
+
+	@Override
+	public boolean writeThread() {
+		return false;
+	}
 }

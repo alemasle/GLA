@@ -17,24 +17,21 @@ public class ThreadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
-		if (session == null) {
-			resp.sendRedirect("/forum/home");
-		} else {
-			DAOServlet dao;
-			try {
-				dao = DAOServlet.getDAO();
-				int threadId = Integer.parseInt(req.getParameter("id"));
-				dao.incrementeVues(threadId);
-				List<Message> messages = dao.getThreadMessages(threadId);
+		DAOServlet dao;
+		try {
+			dao = DAOServlet.getDAO();
+			int threadId = Integer.parseInt(req.getParameter("id"));
+			dao.incrementeVues(threadId);
+			List<Message> messages = dao.getThreadMessages(threadId);
+			String threadName = dao.getThreadName(threadId);
 
-				req.setAttribute("messages", messages);
-				session.setAttribute("idThread", threadId);
-				req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
-			}
+			req.setAttribute("messages", messages);
+			req.setAttribute("threadName", threadName);
+			session.setAttribute("idThread", threadId);
+			req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	@Override

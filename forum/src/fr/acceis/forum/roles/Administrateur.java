@@ -42,4 +42,9 @@ public class Administrateur implements Role {
 		return true;
 	}
 
+	@Override
+	public boolean writeThread() {
+		return true;
+	}
+
 }

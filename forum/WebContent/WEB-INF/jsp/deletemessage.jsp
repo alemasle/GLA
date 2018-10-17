@@ -34,7 +34,7 @@
 			<table class="tablebg" cellspacing="1" width="100%">
 				<tbody>
 					<tr>
-						<th colspan="2">New Thread</th>
+						<th colspan="2">You need to give your password in order to delete this message</th>
 					</tr>
 
 					<tr>

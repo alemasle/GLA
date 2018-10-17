@@ -20,7 +20,7 @@ public class AccueilServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-//		HttpSession session = req.getSession();
+		HttpSession session = req.getSession();
 //
 //		if (session.getAttribute("user") == null) {
 //			session.setAttribute("user", "invite");
@@ -31,6 +31,9 @@ public class AccueilServlet extends HttpServlet {
 //		} else if ("invite".compareTo((String) session.getAttribute("user")) != 0) {
 //			session.removeAttribute("idThread");
 //		}
+		if ("invite".compareTo((String) session.getAttribute("user")) != 0) {
+			session.removeAttribute("idThread");
+		}
 
 		try {
 			DAOServlet dao = DAOServlet.getDAO();

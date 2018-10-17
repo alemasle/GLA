@@ -22,9 +22,8 @@
 						<tr>
 							<td class="row1">
 								<p class="breadcrumbs">
-
 									<c:choose>
-										<c:when test="${ sess }">
+										<c:when test="${ utilisateur.getRole().getRole() != 'Invite' }">
 											<a href="/forum/profil?login=${user}"><b><c:out value="${user}" /></b></a>&nbsp;
 											<a href="/forum/logout" type=""><b><u>D&eacute;connexion</u></b></a>
 										</c:when>
@@ -34,7 +33,6 @@
 											<a href="/forum/signup"><b><u>Inscriptions</u></b></a>
 										</c:otherwise>
 									</c:choose>
-
 								</p>
 							</td>
 						</tr>

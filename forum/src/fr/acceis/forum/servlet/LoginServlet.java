@@ -19,12 +19,12 @@ public class LoginServlet extends HttpServlet {
 		HttpSession session = req.getSession(false);
 		String user = (String) session.getAttribute("user");
 		
-		if (session.getAttribute("user") == null) {
-			session.setAttribute("user", "invite");
-			Role role = new Invite();
-			Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
-			session.setAttribute("utilisateur", invite);
-		}
+//		if (user == null) {
+//			session.setAttribute("user", "invite");
+//			Role role = new Invite();
+//			Utilisateur invite = new Utilisateur("invite", "", 0, 0, "", "", role);
+//			session.setAttribute("utilisateur", invite);
+//		}
 		
 		if ("invite".compareTo(user) != 0) {
 			resp.sendRedirect("/forum/home");
