@@ -7,7 +7,7 @@
 	<title>Profil de "<c:out value="${login}" />"</title>
 	
 	
-	<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
 	</head>
 	<body class="ltr">
 	
@@ -56,7 +56,7 @@
 							
 							<tr>
 								<td>
-									<img src="fichiers/${userProfil.getAvatar()}" alt="${login} has no picture" height="7%" width="7%"/>
+									<img src="fichiers/${userProfil.getAvatar()}" alt="${login} has no picture" height="10%" width="10%"/>
 								</td>
 								<c:if test="${sess}">
 									<td valign="top" align="right">
@@ -68,21 +68,11 @@
 							</tr>
 
 							<tr>
-								<table class="tablebg" cellspacing="1" width="100%">
-									<tbody>
-										<tr>
-											<th colspan="2">Informations</th>
-										</tr>
-										<tr>
-											<td valign="middle" align="left">
-												<b>Username: </b> <c:out value="${login}" /> <br />
-												<b>Nombre de posts: </b><c:out value="${userProfil.getNbPosts()}" /> <br />
-												<b>Inscription: </b><c:out value="${userProfil.getSignUp()}" />
-											</td>
-										</tr>
-										
-									</tbody>
-								</table>
+								<td valign="middle" align="left">
+									<b>Username: </b> <c:out value="${login}" /> <br />
+									<b>Nombre de posts: </b><c:out value="${userProfil.getNbPosts()}" /> <br />
+									<b>Inscription: </b><c:out value="${userProfil.getSignUp()}" />
+								</td>
 							</tr>							
 						</tbody>
 					</table>

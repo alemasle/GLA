@@ -12,6 +12,11 @@ import fr.acceis.forum.entity.Utilisateur;
 
 public class SignUpServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
@@ -32,14 +37,14 @@ public class SignUpServlet extends HttpServlet {
 			try {
 				dao = DAOServlet.getDAO();
 				if (dao.addUser(user, pass)) {
-					System.out.println("--> " + user + " has signed up");
 					Utilisateur u = dao.getUser(user);
 					HttpSession session = req.getSession();
 					session.setAttribute("sess", true);
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
 					resp.sendRedirect("/forum/home");
-					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- signup success (" + req.getRemoteAddr() + ")" );
+					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- signup success ("
+							+ req.getRemoteAddr() + ")");
 				} else {
 					System.out.println("Fail to create user!");
 					req.setAttribute("error", "exist");

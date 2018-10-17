@@ -10,6 +10,7 @@ public class ControleAccessManager {
 		Role role = user.getRole();
 
 		switch (uri) {
+
 		case "home":
 			return true;
 
@@ -44,7 +45,7 @@ public class ControleAccessManager {
 			return role.getRole().compareTo("Invite") == 0;
 
 		default:
-			return true;
+			return false;
 		}
 	}
 

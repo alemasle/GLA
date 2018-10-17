@@ -11,14 +11,14 @@ import javax.servlet.http.HttpSession;
 
 public class DeleteMessageServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String user = (String) req.getSession().getAttribute("user");
-		if (user == null) {
-			resp.sendRedirect("/forum/home");
-		} else {
-			req.getRequestDispatcher("/WEB-INF/jsp/deletemessage.jsp").forward(req, resp);
-		}
+		req.getRequestDispatcher("/WEB-INF/jsp/deletemessage.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class DeleteMessageServlet extends HttpServlet {
 			dao = DAOServlet.getDAO();
 			if (dao.checkUser(user, pass)) {
 				dao.deleteMessage(id);
-				System.out.println("\"" + user + "\" --> Suppression message " + id);
+				System.out.println("--> \"" + user + "\": Suppression message " + id);
 				resp.sendRedirect("/forum/thread?id=" + idThread);
 
 			} else {
 				req.setAttribute("error", "invalide");
-				req.getRequestDispatcher("/WEB-INF/jsp/delete.jsp").forward(req, resp);
+				req.getRequestDispatcher("/WEB-INF/jsp/deletemessage.jsp").forward(req, resp);
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

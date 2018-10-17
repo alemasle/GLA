@@ -19,13 +19,8 @@ import fr.acceis.forum.roles.Role;
 
 public class AccessFilter implements Filter {
 
-	private final String LOGIN = "/forum/login";
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-//		if (filterConfig == null) {
-//			System.out.println("Erreur config");
-//		}
 
 	}
 
@@ -51,8 +46,13 @@ public class AccessFilter implements Filter {
 			path = path.substring(1);
 		}
 
+		if (path.startsWith("css") || path.startsWith("fichiers")) {
+			chain.doFilter(req, resp);
+			return;
+		}
+
 		if (ControleAccessManager.autorize(utilisateur, path)) {
-			chain.doFilter(request, response);
+			chain.doFilter(req, resp);
 		} else {
 			resp.sendRedirect("/forum/home");
 		}

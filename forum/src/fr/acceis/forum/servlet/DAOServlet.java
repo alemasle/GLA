@@ -23,6 +23,11 @@ import fr.acceis.forum.roles.User;
 
 public final class DAOServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2557678850026671967L;
+
 	private Connection connexion;
 
 	private static DAOServlet dao = null;

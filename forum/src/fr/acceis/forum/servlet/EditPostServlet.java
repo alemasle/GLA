@@ -7,16 +7,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 public class EditPostServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession(false);
-		if (session == null || req.getSession().getAttribute("idThread") == null) {
+		if (req.getSession().getAttribute("idThread") == null) {
 			resp.sendRedirect("/forum/home");
-
 		} else {
 
 			DAOServlet dao;

@@ -1,14 +1,21 @@
 package fr.acceis.forum.servlet;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -18,14 +25,14 @@ import org.apache.commons.fileupload.servlet.ServletRequestContext;
 
 public class UploadAvatarServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession(false);
-		if (session.getAttribute("user") == null) {
-			resp.sendRedirect("/forum/home");
-		} else {
-			req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
-		}
+		req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -50,25 +57,50 @@ public class UploadAvatarServlet extends HttpServlet {
 
 					String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
 					String[] tabName = fi.getName().split("\\.");
+					String extension = tabName[tabName.length - 1];
 
-					String fileName = user + "." + tabName[tabName.length - 1];
+					String fileNameTmp = user + "-tmp." + extension;
+					String fileName = user + "." + extension;
 
-					File file = new File(path + fileName);
-					fi.write(file);
-					System.out.println("\"" + user + "\" --> uploaded a new avatar:" + fileName);
+					File outputFile = new File(path + fileNameTmp);
+					InputStream is;
+					BufferedImage image;
+					OutputStream os;
+					try {
+						is = fi.getInputStream();
+						image = ImageIO.read(is);
+						os = new FileOutputStream(outputFile);
+						ImageIO.write(image, extension, os);
 
-					dao.updateAvatar(user, fileName);
-					req.getSession().setAttribute("avatar", dao.getAvatar(user));
+						File newF = new File(path + fileName);
+						outputFile.renameTo(newF);
 
-					resp.sendRedirect("/forum/profil?login=" + user);
+						System.out.println("--> \"" + user + "\": uploaded a new avatar: " + fileName);
+
+						dao.updateAvatar(user, fileName);
+
+						is.close();
+						os.close();
+
+						req.getSession().setAttribute("avatar", dao.getAvatar(user));
+						resp.sendRedirect("/forum/profil?login=" + user);
+
+					} catch (Exception exp) {
+						outputFile.delete();
+
+						System.out.println("--> " + user + " uploaded: " + fileName
+								+ " - ERROR during convert, can be corrupted: REJECTED");
+						req.setAttribute("error", "convert");
+						req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
+						return;
+					}
+
 				}
-
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 }

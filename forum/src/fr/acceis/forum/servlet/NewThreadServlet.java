@@ -7,27 +7,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import fr.acceis.forum.entity.Utilisateur;
 
 public class NewThreadServlet extends HttpServlet {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession();
-		String user = (String) session.getAttribute("user");
-
-		if (user == null || "invite".compareTo(user) == 0) {
-			resp.sendRedirect("/forum/home");
-		} else {
-			Utilisateur u = (Utilisateur) session.getAttribute("utilisteur");
-			if (!u.getRole().writeMessage()) {
-				resp.sendRedirect("/forum/home");
-			} else {
-				req.getRequestDispatcher("/WEB-INF/jsp/newthread.jsp").forward(req, resp);
-			}
-		}
+		req.getRequestDispatcher("/WEB-INF/jsp/newthread.jsp").forward(req, resp);
 	}
 
 	@Override

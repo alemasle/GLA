@@ -7,7 +7,7 @@
 
 <title>Edit Message</title>
 
-<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body class="ltr">
 

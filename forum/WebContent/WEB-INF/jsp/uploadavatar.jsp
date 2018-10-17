@@ -7,7 +7,7 @@
 
 <title>Upload Avatar</title>
 
-<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
+<link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body class="ltr">
 
@@ -50,6 +50,12 @@
 										<tr>
 											<td></td>
 											<td style="color:#FF0000">You can not submit empty fields</td>
+										</tr>
+									</c:if>
+									<c:if test="${ error == 'convert'}">
+										<tr>
+											<td></td>
+											<td style="color:#FF0000">Your image is invalid or corrupted</td>
 										</tr>
 									</c:if>
 								</tbody>

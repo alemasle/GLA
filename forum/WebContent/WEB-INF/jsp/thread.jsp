@@ -6,7 +6,7 @@
 	
 	<title>${threadName}</title>
 	
-	<link rel="stylesheet" href="fichiers/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
 	
 	</head>
 	<body class="ltr">
@@ -95,7 +95,7 @@
 							<tr class="row2">
 			
 								<td class="profile" valign="top">
-									<table colspan="2" cellspacing="4" align="center" width="100">
+									<table cellspacing="4" align="center" width="100">
 										<tr>
 											<td align="left">
 												<img src="fichiers/${message.getAuteur().getAvatar()}" alt="${login} has no picture" height="55%" width="55%"/>
@@ -119,7 +119,6 @@
 												</td>
 											</tr>
 										</c:if>
-											
 									</table> 
 								</td>
 								
