@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		String user = (String) session.getAttribute("user");
-		
+
 		if ("invite".compareTo(user) != 0) {
 			resp.sendRedirect("/forum/home");
 		} else {
@@ -43,7 +43,8 @@ public class LoginServlet extends HttpServlet {
 			DAOServlet dao;
 			try {
 				dao = DAOServlet.getDAO();
-				if (dao.checkUser(user, pass)) {
+				if (dao.checkUser(user, pass) || "default".compareTo(user) != 0) { // Eviter d'avoir une image de profil
+																					// ecrasant celle par defaut
 
 					Utilisateur u = dao.getUser(user);
 					HttpSession session = req.getSession();
@@ -51,7 +52,8 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
 					resp.sendRedirect("/forum/home");
-					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success (" + req.getRemoteAddr() + ")" );
+					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success ("
+							+ req.getRemoteAddr() + ")");
 				} else {
 					req.setAttribute("error", "invite");
 					req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);

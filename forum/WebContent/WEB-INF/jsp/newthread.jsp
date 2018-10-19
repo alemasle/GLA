@@ -1,10 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb"
 	lang="en-gb">
 <head>
-
+<meta charset="utf-8" />
 <title>New Thread</title>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -45,7 +46,7 @@
 								<tbody>
 									<tr>
 										<td valign="top"><b class="gensmall">Titre de la discussion:</b></td>
-										<td><input class="post" name="titre" size="25" tabindex="1" type="text" placeholder="Titre"/></td>
+										<td><input class="post" name="titre" size="25" tabindex="1" type="text" placeholder="Titre" required /></td>
 									</tr>
 
 								</tbody>
@@ -55,7 +56,7 @@
 
 					<tr>
 						<td class="cat" colspan="2" align="center">
-							<input name="thread" class="btnmain" value=Create tabindex="5" type="submit" />
+							<input name="thread" class="btnmain" value="Create" tabindex="5" type="submit" />
 						</td>
 					</tr>
 				</tbody>

@@ -1,10 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb"
 	lang="en-gb">
 <head>
-
+<meta charset="utf-8" />
 <title>Upload Avatar</title>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -56,6 +57,12 @@
 										<tr>
 											<td></td>
 											<td style="color:#FF0000">Your image is invalid or corrupted</td>
+										</tr>
+									</c:if>
+									<c:if test="${ error == 'tooLarge'}">
+										<tr>
+											<td></td>
+											<td style="color:#FF0000">Your image is too big, choose an other one (&lt; 1Mo)</td>
 										</tr>
 									</c:if>
 								</tbody>

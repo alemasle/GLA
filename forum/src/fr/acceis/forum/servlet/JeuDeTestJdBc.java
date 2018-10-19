@@ -13,9 +13,9 @@ public class JeuDeTestJdBc {
 			"create table Threads (id integer, auteur integer not null, name varchar(255), vues integer default 0, primary key (id), foreign key (auteur) references Utilisateurs(id))",
 			"create table Messages (id integer, auteur integer not null, idThread integer not null, texte varchar(5000), date varchar(100), edited boolean default false, primary key (id), foreign key (idThread) references Threads(id), foreign key (auteur) references Utilisateurs(id))",
 
-			"INSERT INTO UTILISATEURS(login,password, avatar, role) VALUES('admin', 'admin', 'admin.jpg', 'Administrateur')",
-			"INSERT INTO UTILISATEURS(login,password, avatar) VALUES('pierre', 'pierre', 'pierre.jpg')",
-			"INSERT INTO UTILISATEURS(login,password, avatar) VALUES('paul', 'paul', 'paul.jpg')",
+			"INSERT INTO UTILISATEURS(login,password, avatar, role) VALUES('admin', 'admin', 'admin.gif', 'Administrateur')",
+			"INSERT INTO UTILISATEURS(login,password) VALUES('pierre', 'pierre')",
+			"INSERT INTO UTILISATEURS(login,password) VALUES('paul', 'paul')",
 			"INSERT INTO UTILISATEURS(login,password) VALUES('jacques', 'jacques')",
 
 			"INSERT INTO THREADS(auteur, name) VALUES(1, 'Mon premier thread est nul et sans interet')",

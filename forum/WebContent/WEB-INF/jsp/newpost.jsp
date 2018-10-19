@@ -1,10 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@page pageEncoding="UTF-8"%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb"
 	lang="en-gb">
 <head>
-
+<meta charset="utf-8" />
 <title>New Message</title>
 
 <link rel="stylesheet" href="css/style.css" type="text/css" />
@@ -45,7 +46,7 @@
 								<tbody>
 									<tr>
 										<td valign="top"><b class="gensmall">Message:</b></td>
-										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractères max)" ></textarea></td>
+										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractÃ¨res max)" required></textarea></td>
 									</tr>
 								</tbody>
 							</table>

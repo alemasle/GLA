@@ -25,6 +25,7 @@ public class ProfilServlet extends HttpServlet {
 		try {
 			dao = DAOServlet.getDAO();
 			String login = req.getParameter("login");
+
 			Utilisateur profil = dao.getUser(login);
 
 			List<Thread> lthread = dao.getThreadUser(login);
@@ -32,6 +33,7 @@ public class ProfilServlet extends HttpServlet {
 			req.setAttribute("login", login);
 			req.setAttribute("userProfil", profil);
 			req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
+//			}
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			e.printStackTrace();

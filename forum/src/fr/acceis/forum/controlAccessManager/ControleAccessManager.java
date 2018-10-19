@@ -33,7 +33,7 @@ public class ControleAccessManager {
 			return role.editMessage();
 
 		case "profil":
-			return role.readProfil();
+			return role.readProfil() && user.getLogin() != null && "".compareTo(user.getLogin()) != 0;
 
 		case "uploadavatar":
 			return role.readProfil();

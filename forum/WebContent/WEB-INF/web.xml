@@ -5,7 +5,7 @@
 	id="WebApp_ID" version="3.1">
 
 	<display-name>Forum</display-name>
-	
+
 	<servlet>
 		<servlet-name>accueil</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.AccueilServlet</servlet-class>
@@ -86,7 +86,7 @@
 		<servlet-name>Profil</servlet-name>
 		<url-pattern>/profil</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>UploadAvatar</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.UploadAvatarServlet</servlet-class>
@@ -95,7 +95,7 @@
 		<servlet-name>UploadAvatar</servlet-name>
 		<url-pattern>/uploadavatar</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet>
 		<servlet-name>DeleteMessage</servlet-name>
 		<servlet-class>fr.acceis.forum.servlet.DeleteMessageServlet</servlet-class>
@@ -104,7 +104,7 @@
 		<servlet-name>DeleteMessage</servlet-name>
 		<url-pattern>/deletemessage</url-pattern>
 	</servlet-mapping>
-	
+
 	<filter>
 		<filter-name>AcessControl</filter-name>
 		<filter-class>fr.acceis.forum.filters.AccessFilter</filter-class>
@@ -113,6 +113,5 @@
 		<filter-name>AcessControl</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
 
 </web-app>

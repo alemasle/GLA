@@ -1,9 +1,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page pageEncoding="UTF-8"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" xml:lang="en-gb"
 	lang="en-gb">
 	<head>
-	
+	<meta charset="utf-8" />
 	<title>Profil de "<c:out value="${login}" />"</title>
 	
 	
@@ -24,7 +26,7 @@
 								<p class="breadcrumbs">
 									<c:choose>
 										<c:when test="${ utilisateur.getRole().getRole() != 'Invite' }">
-											<a href="/forum/profil?login=${user}"><b><c:out value="${user}" /></b></a>&nbsp;
+											<a href="/forum/profil?login=<c:out value="${user}"/>"><b><c:out value="${user}" /></b></a>&nbsp;
 											<a href="/forum/logout" type=""><b><u>D&eacute;connexion</u></b></a>
 										</c:when>
 										
@@ -49,7 +51,7 @@
 								</td>
 								<c:if test="${user == login}">
 									<td valign="top" align="right">
-										 	<a href="/forum/uploadavatar"><u>Change your avatar</u></a>
+										<a href="/forum/uploadavatar"><u>Change your avatar</u></a>
 									</td>
 								</c:if>
 							</tr>
@@ -58,13 +60,11 @@
 								<td>
 									<img src="fichiers/${userProfil.getAvatar()}" alt="${login} has no picture" height="10%" width="10%"/>
 								</td>
-								<c:if test="${sess}">
-									<td valign="top" align="right">
-									 	<a href="/forum/newthread">
-											<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
-										</a>
-									</td>
-								</c:if>
+								<td valign="top" align="right">
+								 	<a href="/forum/newthread">
+										<img src="fichiers/button_topic_new.gif" alt="Post new topic" title="Post new topic" />
+									</a>
+								</td>
 							</tr>
 
 							<tr>

@@ -31,6 +31,7 @@ public class AccessFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpSession session = req.getSession();
+		req.setCharacterEncoding("UTF-8");
 
 		if (session.getAttribute("user") == null || session.getAttribute("utilisateur") == null) {
 			session.setAttribute("user", "invite");
@@ -41,7 +42,6 @@ public class AccessFilter implements Filter {
 
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
 		String path = req.getServletPath();
-
 		if (path.startsWith("/")) {
 			path = path.substring(1);
 		}

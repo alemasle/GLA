@@ -1,5 +1,6 @@
 package fr.acceis.forum.servlet;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -488,6 +489,14 @@ public final class DAOServlet extends HttpServlet {
 	}
 
 	public void updateAvatar(String user, String avatar) throws SQLException {
+		String oldAvatar = getAvatar(user);
+
+		if (oldAvatar.compareTo(avatar) != 0) {
+			String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
+			File old = new File(path + oldAvatar);
+			old.delete();
+		}
+
 		String sql = "UPDATE Utilisateurs SET avatar=? WHERE login=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
 		stat.setString(1, avatar);
