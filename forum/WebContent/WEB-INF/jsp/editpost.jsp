@@ -45,7 +45,7 @@
 								<tbody>
 									<tr>
 										<td valign="top"><b class="gensmall">Message:</b></td>
-										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractères max)" ><c:out value="${txt}" /></textarea></td>
+										<td><textarea name="texte" rows="10" cols="100" maxlength="5000" placeholder="Votre message...(5000 caractères max)" required><c:out value="${txt}" /></textarea></td>
 									</tr>
 								</tbody>
 							</table>
