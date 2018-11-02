@@ -47,7 +47,7 @@
 							
 							<tr>
 								<td>
-									Photo de profil <b><c:out value="${login}"></c:out></b>:<br />
+									Photo de profil de <b><c:out value="${login}"></c:out></b>:<br />
 								</td>
 								<c:if test="${user == login}">
 									<td valign="top" align="right">
@@ -58,7 +58,7 @@
 							
 							<tr>
 								<td>
-									<img src="fichiers/${userProfil.getAvatar()}" alt="${login} has no picture" height="10%" width="10%"/>
+									<img src="fichiers/<c:out value="${userProfil.getAvatar()}" />" alt="<c:out value="${login} is loading the profil picture" />" height="10%" width="10%"/>
 								</td>
 								<td valign="top" align="right">
 								 	<a href="/forum/newthread">
@@ -99,12 +99,12 @@
 								<c:otherwise>
 									<c:forEach items="${threads_answered}" var="thread">
 										<tr>
-											<td class="row1"><a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}"></c:out></a></td>
+											<td class="row1"><a class="topictitle" href="thread?id=<c:out value="${thread.getId()}" />" ><c:out value="${thread.getName()}"></c:out></a></td>
 											<td class="row2" align="center" width="130">
 												<p class="topicauthor">
 													<c:choose>
 														<c:when test="${user == thread.getAuteur() or (utilisateur.getRole().readProfil())}">
-													<a class="username-coloured" href="/forum/profil?login=${thread.getAuteur()}"><c:out value="${thread.getAuteur()}" /></a>
+													<a class="username-coloured" href="/forum/profil?login=<c:out value="${thread.getAuteur()}" />"><c:out value="${thread.getAuteur()}" /></a>
 														</c:when>
 														<c:otherwise>
 															<c:out value="${thread.getAuteur()}" />

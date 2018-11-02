@@ -69,6 +69,13 @@
 									</tr>
 									</c:if>
 									
+									<c:if test="${ error == 'invalidChars'}">
+									<tr>
+										<td></td>
+										<td style="color:#FF0000"><c:out value="Prohibited characters: [ $ & + , : ; = \ ? @ # | / ' > < . ^ * ( ) % ! - ]" /></td>
+									</tr>
+									</c:if>
+									
 								</tbody>
 							</table>
 						</td>

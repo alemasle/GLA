@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -48,12 +49,12 @@ public class UploadAvatarServlet extends HttpServlet {
 				FileItem fi = items.get(0);
 
 				if (fi.getSize() > SIZE_MAX) {
-					
-					System.out.println("--> " + user + " uploaded: " + fi.getName()
-							+ " -- ERROR image too much big : REJECTED");
+
+					System.out.println(
+							"--> " + user + " uploaded: " + fi.getName() + " -- ERROR image too much big : REJECTED");
 					req.setAttribute("error", "tooLarge");
 					req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
-					
+
 				} else {
 
 					if ("".compareTo(fi.getName()) == 0) {
@@ -109,7 +110,7 @@ public class UploadAvatarServlet extends HttpServlet {
 							os.close();
 
 							req.getSession().setAttribute("avatar", dao.getAvatar(user));
-							resp.sendRedirect("/forum/profil?login=" + user);
+							resp.sendRedirect("/forum/profil?login=" + URLEncoder.encode(user, "UTF-8"));
 
 						} catch (Exception exp) {
 							outputFile.delete();

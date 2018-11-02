@@ -1,6 +1,10 @@
 package fr.acceis.forum.servlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,14 +23,7 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		HttpSession session = req.getSession(false);
-		String user = (String) session.getAttribute("user");
-
-		if ("invite".compareTo(user) != 0) {
-			resp.sendRedirect("/forum/home");
-		} else {
-			req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-		}
+		req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
 	}
 
 	@Override
@@ -42,9 +39,17 @@ public class LoginServlet extends HttpServlet {
 
 			DAOServlet dao;
 			try {
+				String passSalted = pass + user;
+				String hashedSalted = "";
+
+				StringBuffer hexString = sha256(passSalted);
+				hashedSalted = hexString.toString();
+				System.out.println("Hashé et salé: " + hashedSalted);
+
 				dao = DAOServlet.getDAO();
-				if (dao.checkUser(user, pass) || "default".compareTo(user) != 0) { // Eviter d'avoir une image de profil
-																					// ecrasant celle par defaut
+				if (dao.checkUser(user, hashedSalted)) { // Eviter d'avoir une image
+															// de profil ecrasant celle
+															// par defaut
 
 					Utilisateur u = dao.getUser(user);
 					HttpSession session = req.getSession();
@@ -52,6 +57,7 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
 					resp.sendRedirect("/forum/home");
+
 					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success ("
 							+ req.getRemoteAddr() + ")");
 				} else {
@@ -59,11 +65,28 @@ public class LoginServlet extends HttpServlet {
 					req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
 					System.out.println("--> " + user + " connection failed");
 				}
-			} catch (Exception e) {
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException
+					| NoSuchAlgorithmException e) {
 				e.printStackTrace();
 			}
 
 		}
+	}
+
+	private StringBuffer sha256(String passSalted) throws NoSuchAlgorithmException {
+		MessageDigest digest;
+		digest = MessageDigest.getInstance("SHA-256");
+		byte[] hash = digest.digest(passSalted.getBytes(StandardCharsets.UTF_8));
+
+		StringBuffer hexString = new StringBuffer();
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if (hex.length() == 1)
+				hexString.append('0');
+			hexString.append(hex);
+		}
+
+		return hexString;
 	}
 
 }

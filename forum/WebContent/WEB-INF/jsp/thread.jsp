@@ -6,7 +6,7 @@
 	lang="en-gb">
 	<head>
 	<meta charset="utf-8" />
-	<title>${threadName}</title>
+	<title><c:out value="${threadName}" /></title>
 	
 	<link rel="stylesheet" href="css/style.css" type="text/css" />
 	
@@ -26,7 +26,7 @@
 								
 									<c:choose>
 										<c:when test="${ utilisateur.getRole().getRole() != 'Invite' }">
-											<a href="/forum/profil?login=${user}"><b><c:out value="${user}" /></b></a>&nbsp;
+											<a href="/forum/profil?login=<c:out value="${user}" />"><b><c:out value="${user}" /></b></a>&nbsp;
 											<a href="/forum/logout" type=""><b><u>D&eacute;connexion</u></b></a>
 										</c:when>
 										
@@ -100,7 +100,7 @@
 									<table cellspacing="4" align="center" width="100">
 										<tr>
 											<td align="left">
-												<img src="fichiers/${message.getAuteur().getAvatar()}" alt="${login} has no picture" height="55%" width="55%"/>
+												<img src="fichiers/<c:out value="${message.getAuteur().getAvatar()}" />" alt="<c:out value="${login} has no picture" />" height="55%" width="55%"/>
 											</td>
 										</tr>
 										<tr>
@@ -110,14 +110,18 @@
 										<c:if test="${user == message.getAuteur().getLogin() and (message.getAuteur().getRole().editMessage()) or (utilisateur.getRole().editAllMessages()) }">
 											<tr>
 												<td valign="bottom">
-													<a href="/forum/editpost?id=${message.getId()}"><b><u>Editer</u></b></a>
+													<a href="/forum/editpost?id=<c:out value="${message.getId()}" />">
+														<b><u>Editer</u></b>
+													</a>
 												</td>
 											</tr>
 										</c:if>
 										<c:if test="${user == message.getAuteur().getLogin() and (message.getAuteur().getRole().deleteMessage()) or (utilisateur.getRole().deleteAllMessages()) }">
 											<tr>
 												<td valign="top">
-													<a href="/forum/deletemessage?id=${message.getId()}"><b><u>Supprimer</u></b></a>
+													<a href="/forum/deletemessage?id=<c:out value="${message.getId()}" />">
+														<b><u>Supprimer</u></b>
+													</a>
 												</td>
 											</tr>
 										</c:if>

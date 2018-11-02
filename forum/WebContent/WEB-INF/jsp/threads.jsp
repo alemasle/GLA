@@ -84,7 +84,7 @@
 									<td class="row1">
 										<c:choose>
 											<c:when test="${utilisateur.getRole().readThread()}">
-												<a class="topictitle" href="thread?id=${thread.getId()}" ><c:out value="${thread.getName()}" /></a>
+												<a class="topictitle" href="thread?id=<c:out value="${thread.getId()}" />" ><c:out value="${thread.getName()}" /></a>
 											</c:when>
 											<c:otherwise>
 												<c:out value="${thread.getName()}" />
@@ -95,9 +95,9 @@
 										<p class="topicauthor">
 											<c:choose>
 												<c:when	test="${user == thread.getAuteur() or (utilisateur.getRole().readProfil())}">
-													<a class="username-coloured"
-														href="/forum/profil?login=${thread.getAuteur()}"><c:out
-															value="${thread.getAuteur()}" /></a>
+													<a class="username-coloured" href="/forum/profil?login=<c:out value="${thread.getAuteur()}" />">
+														<c:out value="${thread.getAuteur()}" />
+													</a>
 												</c:when>
 												<c:otherwise>
 													<c:out value="${thread.getAuteur()}" />

@@ -491,10 +491,11 @@ public final class DAOServlet extends HttpServlet {
 	public void updateAvatar(String user, String avatar) throws SQLException {
 		String oldAvatar = getAvatar(user);
 
-		if (oldAvatar.compareTo(avatar) != 0) {
+		if (oldAvatar.compareTo(avatar) != 0 && oldAvatar.compareTo("default.jpg") != 0) {
 			String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
 			File old = new File(path + oldAvatar);
 			old.delete();
+			System.out.println("Deleting " + user + "'s old avatar: " + oldAvatar);
 		}
 
 		String sql = "UPDATE Utilisateurs SET avatar=? WHERE login=?";
