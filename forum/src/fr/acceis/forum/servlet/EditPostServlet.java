@@ -26,9 +26,18 @@ public class EditPostServlet extends HttpServlet {
 				dao = DAOServlet.getDAO();
 				int idMsg = Integer.parseInt(req.getParameter("id"));
 				int idThread = (int) req.getSession().getAttribute("idThread");
-				dao.decrementeVues(idThread);
-				String msg = dao.getTexte(idMsg);
-				req.setAttribute("txt", msg);
+
+				String u = dao.userFromMessageId(idMsg);
+				String user = (String) req.getSession().getAttribute("user");
+
+				if (!user.equals(u)) {
+					resp.sendRedirect("/forum/thread?id=" + idThread);
+					return;
+				} else {
+					dao.decrementeVues(idThread);
+					String msg = dao.getTexte(idMsg);
+					req.setAttribute("txt", msg);
+				}
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}

@@ -26,9 +26,16 @@ public class ThreadServlet extends HttpServlet {
 		try {
 			dao = DAOServlet.getDAO();
 			int threadId = Integer.parseInt(req.getParameter("id"));
-			dao.incrementeVues(threadId);
-			List<Message> messages = dao.getThreadMessages(threadId);
+
 			String threadName = dao.getThreadName(threadId);
+
+			if (threadName.equals("???")) {
+				resp.sendRedirect("/forum/home");
+				return;
+			}
+
+			List<Message> messages = dao.getThreadMessages(threadId);
+			dao.incrementeVues(threadId);
 
 			req.setAttribute("messages", messages);
 			req.setAttribute("threadName", threadName);

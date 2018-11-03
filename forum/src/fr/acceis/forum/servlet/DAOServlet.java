@@ -552,4 +552,17 @@ public final class DAOServlet extends HttpServlet {
 		statAut.close();
 		return name;
 	}
+
+	public String userFromMessageId(int id) throws SQLException {
+		String sqlThreadsId = "SELECT auteur FROM Messages WHERE id=?";
+		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
+		statAut.setInt(1, id);
+		ResultSet res = statAut.executeQuery();
+		String user = "";
+
+		if (res.next()) {
+			user = getLogin(res.getString("auteur"));
+		}
+		return user;
+	}
 }
