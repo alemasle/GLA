@@ -15,8 +15,8 @@ public class JeuDeTestJdBc {
 			"create table Threads (id integer, auteur integer not null, name varchar(255), vues integer default 0, primary key (id), foreign key (auteur) references Utilisateurs(id))",
 			"create table Messages (id integer, auteur integer not null, idThread integer not null, texte varchar(5000), date varchar(100), edited boolean default false, primary key (id), foreign key (idThread) references Threads(id), foreign key (auteur) references Utilisateurs(id))",
 
-			"INSERT INTO UTILISATEURS(login,password, avatar, role) VALUES('admin', 'd82494f05d6917ba02f7aaa29689ccb444bb73f20380876cb05d1f37537b7892', 'admin.gif', 'Administrateur')",
-
+			"INSERT INTO UTILISATEURS(login,password, avatar, role) VALUES('admin', '279dae236bcdc6f2a92369b9c7589ad2113b391b33ae04ba58756a08e5f00a19', 'admin.gif', 'Administrateur')",
+			// admin:poiuytreza
 	};
 
 	/**

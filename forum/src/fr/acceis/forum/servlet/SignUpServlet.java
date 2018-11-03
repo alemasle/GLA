@@ -36,6 +36,10 @@ public class SignUpServlet extends HttpServlet {
 			System.out.println("Fields empty");
 			req.setAttribute("error", "emptyfields");
 			req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
+		} else if (pass.length() < 8) {
+			System.out.println("Signup password too short: " + pass.length());
+			req.setAttribute("error", "minlength");
+			req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 		} else {
 
 			char[] interdit = "[$&+,:;=\\\\?@#|/'<>.^*()%!-]".toCharArray();

@@ -44,7 +44,6 @@ public class LoginServlet extends HttpServlet {
 
 				StringBuffer hexString = sha256(passSalted);
 				hashedSalted = hexString.toString();
-				System.out.println("Hashé et salé: " + hashedSalted);
 
 				dao = DAOServlet.getDAO();
 				if (dao.checkUser(user, hashedSalted)) { // Eviter d'avoir une image
@@ -56,7 +55,9 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("sess", true);
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
-					resp.sendRedirect("/forum/home");
+					
+					String path = (String) session.getAttribute("accessWanted");
+					resp.sendRedirect(path);
 
 					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success ("
 							+ req.getRemoteAddr() + ")");

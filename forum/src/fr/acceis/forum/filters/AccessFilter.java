@@ -51,10 +51,23 @@ public class AccessFilter implements Filter {
 			return;
 		}
 
+		String tmpPath = (String) session.getAttribute("accessWanted");
+		if (tmpPath == null || !path.equals("login")) {
+			String params = req.getQueryString();
+			if (params != null) {
+				params = "?" + params;
+			}
+			session.setAttribute("accessWanted", "/forum/" + path + params);
+		}
+
 		if (ControleAccessManager.autorize(utilisateur, path)) {
 			chain.doFilter(req, resp);
 		} else {
-			resp.sendRedirect("/forum/home");
+			if (utilisateur.getLogin().compareTo("invite") == 0) {
+				resp.sendRedirect("/forum/login");
+			} else {
+				resp.sendRedirect("/forum/home");
+			}
 		}
 	}
 

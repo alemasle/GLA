@@ -52,8 +52,15 @@
 									<tr>
 										<td valign="top"><b class="gensmall">Mot de passe:</b></td>
 										<td><input class="post" name="password" size="25"
-											tabindex="2" type="password" placeholder="Password" required/></td>
+											tabindex="2" type="password" placeholder="Password" minlength="8" required/></td>
 									</tr>
+									
+									<c:if test="${ error == 'minlength'}">
+									<tr>
+										<td></td>
+										<td style="color:#FF0000">Password too short: 8 characters minimum required</td>
+									</tr>
+									</c:if>
 									
 									<c:if test="${ error == 'exist'}">
 									<tr>
