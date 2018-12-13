@@ -114,7 +114,6 @@ public class UploadAvatarServlet extends HttpServlet {
 
 						} catch (Exception exp) {
 							outputFile.delete();
-
 							System.out.println("--> " + user + " uploaded: " + fileName
 									+ " -- ERROR during convert, can be corrupted: REJECTED");
 							req.setAttribute("error", "convert");
