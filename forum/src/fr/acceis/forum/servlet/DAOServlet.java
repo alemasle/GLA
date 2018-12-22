@@ -208,7 +208,6 @@ public final class DAOServlet extends HttpServlet {
 				String name = resName.getString("name");
 				Message m = new Message(id, auteur, idThr, texte, name, date, edited);
 
-//					System.out.println(m.toString());
 				msg.add(m);
 			}
 			nameReq.close();
@@ -426,7 +425,7 @@ public final class DAOServlet extends HttpServlet {
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
 		statAut.setInt(1, idAut);
 		ResultSet res = statAut.executeQuery();
-		String log = null;
+		String log = "";
 		if (res.next()) {
 			log = res.getString("login");
 		}
@@ -561,7 +560,7 @@ public final class DAOServlet extends HttpServlet {
 		String user = "";
 
 		if (res.next()) {
-			user = getLogin(res.getString("auteur"));
+			user = getLogin(res.getInt("auteur"));
 		}
 		return user;
 	}
