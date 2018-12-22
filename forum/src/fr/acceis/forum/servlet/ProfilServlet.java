@@ -9,10 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Thread;
 import fr.acceis.forum.entity.Utilisateur;
 
 public class ProfilServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(ProfilServlet.class);
 
 	/**
 	 * 
@@ -21,10 +26,10 @@ public class ProfilServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+		String login = req.getParameter("login");
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();
-			String login = req.getParameter("login");
 
 			Utilisateur profil = dao.getUser(login);
 
@@ -35,7 +40,8 @@ public class ProfilServlet extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + (String) req.getSession().getAttribute("user") + "\" tried to access \""
+					+ login + "\" profil page");
 		}
 	}
 

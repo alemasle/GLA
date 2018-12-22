@@ -10,9 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Message;
 
 public class ThreadServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(ThreadServlet.class);
 
 	/**
 	 * 
@@ -22,14 +27,17 @@ public class ThreadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
+		int threadId = Integer.parseInt(req.getParameter("id"));
+
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();
-			int threadId = Integer.parseInt(req.getParameter("id"));
 
 			String threadName = dao.getThreadName(threadId);
 
-			if (threadName.equals("???")) {
+			if (threadName == null) {
+				logger.warn("\"" + (String) req.getSession().getAttribute("user")
+						+ "\" tried to access unknown thread, redirected to home");
 				resp.sendRedirect("/forum/home");
 				return;
 			}
@@ -42,7 +50,8 @@ public class ThreadServlet extends HttpServlet {
 			session.setAttribute("idThread", threadId);
 			req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + (String) req.getSession().getAttribute("user")
+					+ "\" tried to access thread: " + threadId + ", error: " + e.getMessage());
 		}
 	}
 

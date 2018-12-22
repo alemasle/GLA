@@ -20,8 +20,12 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class UploadAvatarServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(UploadAvatarServlet.class);
 
 	/**
 	 * 
@@ -49,16 +53,16 @@ public class UploadAvatarServlet extends HttpServlet {
 				FileItem fi = items.get(0);
 
 				if (fi.getSize() > SIZE_MAX) {
+					logger.warn(
+							"\"" + user + "\" uploaded " + fi.getName() + ", error size of image too big: REJECTED");
 
-					System.out.println(
-							"--> " + user + " uploaded: " + fi.getName() + " -- ERROR image too much big : REJECTED");
 					req.setAttribute("error", "tooLarge");
 					req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 
 				} else {
 
-					if ("".compareTo(fi.getName()) == 0) {
-						System.out.println("Fields empty");
+					if ("".equals(fi.getName())) {
+						logger.warn("\"" + user + "\" tried to upload an empty file: REJECTED");
 						req.setAttribute("error", "emptyfields");
 						req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 					} else {
@@ -102,20 +106,19 @@ public class UploadAvatarServlet extends HttpServlet {
 							File newF = new File(path + fileName);
 							outputFile.renameTo(newF);
 
-							System.out.println("--> \"" + user + "\": uploaded a new avatar: " + fileName);
-
 							dao.updateAvatar(user, fileName);
 
 							is.close();
 							os.close();
 
+							logger.info("\"" + user + "\" uploaded a new avatar: \"" + fileName + "\"");
 							req.getSession().setAttribute("avatar", dao.getAvatar(user));
 							resp.sendRedirect("/forum/profil?login=" + URLEncoder.encode(user, "UTF-8"));
 
 						} catch (Exception exp) {
 							outputFile.delete();
-							System.out.println("--> " + user + " uploaded: " + fileName
-									+ " -- ERROR during convert, can be corrupted: REJECTED");
+							logger.warn("error while converting the image from \"" + user
+									+ "\" , can be corrupted: REJECTED. error: " + exp.getMessage());
 							req.setAttribute("error", "convert");
 							req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 							return;
@@ -125,7 +128,7 @@ public class UploadAvatarServlet extends HttpServlet {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("error while \"" + user + "\" tried to upload a new avatar, error: " + e.getMessage());
 		}
 	}
 

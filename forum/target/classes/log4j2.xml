@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="info">
+  <appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+    </Console>
+
+    <File name="MyFile" fileName="forum/logs/forum_audit.log">
+        <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} %-5level %logger{36} - %msg%n"/>
+    </File>             
+  </appenders>
+
+  <loggers>
+    <root level="trace">
+      <appender-ref ref="Console" level="debug"/>
+      <appender-ref ref="MyFile" level="debug"/>
+    </root>    
+  </loggers>
+</configuration>

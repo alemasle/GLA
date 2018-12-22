@@ -10,9 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Thread;
 
 public class AccueilServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(AccueilServlet.class);
 
 	/**
 	 * 
@@ -24,7 +29,7 @@ public class AccueilServlet extends HttpServlet {
 
 		HttpSession session = req.getSession(false);
 
-		if ("invite".compareTo((String) session.getAttribute("user")) != 0) {
+		if ("invite".equals((String) session.getAttribute("user"))) {
 			session.removeAttribute("idThread");
 		}
 
@@ -33,7 +38,8 @@ public class AccueilServlet extends HttpServlet {
 			List<Thread> threads = dao.getThreads();
 			req.setAttribute("threads", threads);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("\"" + (String) session.getAttribute("user") + "\" error while trying to access home, error: "
+					+ e.getMessage());
 		}
 		req.getRequestDispatcher("/WEB-INF/jsp/threads.jsp").forward(req, resp);
 	}

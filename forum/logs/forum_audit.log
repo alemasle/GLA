@@ -1,0 +1,19 @@
+2018-30-22 23:30:18.618 INFO  fr.acceis.forum.filters.AccessFilter - New visitor ip: 192.168.1.32
+2018-30-22 23:30:18.629 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "login" method: GET
+2018-30-22 23:30:23.509 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "login" method: POST
+2018-30-22 23:30:23.632 WARN  fr.acceis.forum.servlet.LoginServlet - visitor 192.168.1.32 failed to connect with username: "alexis"
+2018-30-22 23:30:31.801 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "login" method: POST
+2018-30-22 23:30:31.805 WARN  fr.acceis.forum.servlet.LoginServlet - visitor 192.168.1.32 failed to connect with username: "albert"
+2018-30-22 23:30:33.954 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "home" method: GET
+2018-30-22 23:30:34.877 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "signup" method: GET
+2018-30-22 23:30:39.482 INFO  fr.acceis.forum.filters.AccessFilter - "invite" accesses to "signup" method: POST
+2018-30-22 23:30:39.501 INFO  fr.acceis.forum.servlet.SignUpServlet - The User has signed up as "alexis" ip: 192.168.1.32
+2018-30-22 23:30:39.516 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "home" method: GET
+2018-30-22 23:30:41.328 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "profil" method: GET
+2018-30-22 23:30:42.862 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "uploadavatar" method: GET
+2018-30-22 23:30:46.854 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "uploadavatar" method: POST
+2018-30-22 23:30:47.968 INFO  fr.acceis.forum.servlet.UploadAvatarServlet - "alexis" uploaded a new avatar: "alexis.jpg"
+2018-30-22 23:30:48.018 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "profil" method: GET
+2018-30-22 23:30:50.853 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "profil" method: GET
+2018-30-22 23:30:52.692 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "profil" method: GET
+2018-30-22 23:30:54.233 INFO  fr.acceis.forum.filters.AccessFilter - "alexis" accesses to "profil" method: GET

@@ -12,9 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Utilisateur;
 
 public class LoginServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(LoginServlet.class);
 
 	/**
 	 * 
@@ -32,7 +37,7 @@ public class LoginServlet extends HttpServlet {
 		String pass = req.getParameter("password");
 
 		if ("".compareTo(user) == 0 || "".compareTo(pass) == 0) {
-			System.out.println("Fields empty");
+			logger.warn("visitor " + req.getRemoteAddr() + " tried to log in with empty fields");
 			req.setAttribute("error", "emptyfields");
 			req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
 		} else {
@@ -55,25 +60,33 @@ public class LoginServlet extends HttpServlet {
 					session.setAttribute("sess", true);
 					session.setAttribute("user", user);
 					session.setAttribute("utilisateur", u);
-					
+
 					String path = (String) session.getAttribute("accessWanted");
+					logger.info("The " + u.getRole().getRole() + " \"" + user + "\" has connected. ip: "
+							+ req.getRemoteAddr());
 					resp.sendRedirect(path);
 
-					System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- connection success ("
-							+ req.getRemoteAddr() + ")");
 				} else {
 					req.setAttribute("error", "invite");
 					req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
-					System.out.println("--> " + user + " connection failed");
+					logger.warn(
+							"visitor " + req.getRemoteAddr() + " failed to connect with username: \"" + user + "\"");
 				}
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException
 					| NoSuchAlgorithmException e) {
-				e.printStackTrace();
+				logger.error(
+						"error while visitor " + req.getRemoteAddr() + " tried to login, error: " + e.getMessage());
 			}
 
 		}
 	}
 
+	/**
+	 * 
+	 * @param passSalted The password to hash
+	 * @return The StringBuffer with the password hashed
+	 * @throws NoSuchAlgorithmException
+	 */
 	private StringBuffer sha256(String passSalted) throws NoSuchAlgorithmException {
 		MessageDigest digest;
 		digest = MessageDigest.getInstance("SHA-256");

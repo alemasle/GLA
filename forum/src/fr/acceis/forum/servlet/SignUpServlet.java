@@ -13,9 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Utilisateur;
 
 public class SignUpServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(SignUpServlet.class);
 
 	/**
 	 * 
@@ -33,11 +38,12 @@ public class SignUpServlet extends HttpServlet {
 		String pass = req.getParameter("password");
 
 		if ("".compareTo(user) == 0 || "".compareTo(pass) == 0) {
-			System.out.println("Fields empty");
+			logger.warn("visitor " + req.getRemoteAddr() + " tried to sign up with empty fields");
 			req.setAttribute("error", "emptyfields");
 			req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 		} else if (pass.length() < 8) {
-			System.out.println("Signup password too short: " + pass.length());
+			logger.warn("visitor " + req.getRemoteAddr() + " tried to sign up with a too short password (len:"
+					+ pass.length() + ")");
 			req.setAttribute("error", "minlength");
 			req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 		} else {
@@ -54,7 +60,7 @@ public class SignUpServlet extends HttpServlet {
 			}
 
 			if (!formatOk) {
-				System.out.println("Fail to create user: invalid chars " + user);
+				logger.warn("visitor " + req.getRemoteAddr() + " tried to sign up with invalid characters: " + user);
 				req.setAttribute("error", "invalidChars");
 				req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 			}
@@ -71,8 +77,9 @@ public class SignUpServlet extends HttpServlet {
 
 					dao = DAOServlet.getDAO();
 
-					if ("default".compareTo(user) == 0) {
-						System.out.println("Fail to create user!");
+					if ("default".compareTo(user) == 0) { // Invalide username "default"
+						logger.warn(
+								"visitor " + req.getRemoteAddr() + " tried to sign up with invalid username: " + user);
 						req.setAttribute("error", "exist");
 						req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 					}
@@ -83,24 +90,33 @@ public class SignUpServlet extends HttpServlet {
 						session.setAttribute("sess", true);
 						session.setAttribute("user", user);
 						session.setAttribute("utilisateur", u);
+
+						logger.info("The " + u.getRole().getRole() + " has signed up as \"" + user + "\" ip: "
+								+ req.getRemoteAddr());
 						resp.sendRedirect("/forum/home");
-						System.out.println("--> " + u.getRole().getRole() + " : " + user + " -- signup success ("
-								+ req.getRemoteAddr() + ")");
 					}
 
 					else {
-						System.out.println("Fail to create user!");
+						logger.warn("visitor " + req.getRemoteAddr()
+								+ " tried to sign up with already existing username: " + user);
 						req.setAttribute("error", "exist");
 						req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 					}
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException
 						| NoSuchAlgorithmException | SQLException e) {
-					e.printStackTrace();
+					logger.error("error while \"" + (String) req.getSession().getAttribute("user")
+							+ "\" tried to sign up at ip: " + req.getRemoteAddr() + ", error: " + e.getMessage());
 				}
 			}
 		}
 	}
 
+	/**
+	 * 
+	 * @param passSalted The password to hash
+	 * @return The StringBuffer with the password hashed
+	 * @throws NoSuchAlgorithmException
+	 */
 	private StringBuffer sha256(String passSalted) throws NoSuchAlgorithmException {
 		MessageDigest digest;
 		digest = MessageDigest.getInstance("SHA-256");

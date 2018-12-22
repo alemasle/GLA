@@ -8,7 +8,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class NewThreadServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(NewThreadServlet.class);
 
 	/**
 	 * 
@@ -28,8 +33,9 @@ public class NewThreadServlet extends HttpServlet {
 		try {
 			dao = DAOServlet.getDAO();
 			dao.newThread(auteur, titre);
+			logger.info("\"" + auteur + "\" posted a new thread: \"" + titre + "\"");
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + auteur + "\" tried to post a new thread, error: " + e.getMessage());
 		}
 		resp.sendRedirect("/forum/home");
 	}

@@ -9,7 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class NewPostServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(NewPostServlet.class);
 
 	/**
 	 * 
@@ -25,7 +30,8 @@ public class NewPostServlet extends HttpServlet {
 			int idThread = (int) req.getSession().getAttribute("idThread");
 			dao.decrementeVues(idThread);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + (String) req.getSession().getAttribute("user")
+					+ "\" tried to access newpost page, error: " + e.getMessage());
 		}
 
 		req.getRequestDispatcher("/WEB-INF/jsp/newpost.jsp").forward(req, resp);
@@ -41,9 +47,11 @@ public class NewPostServlet extends HttpServlet {
 			dao = DAOServlet.getDAO();
 			dao.newPost(idThread, auteur, texte);
 			dao.updateNbPosts(auteur);
+			logger.info("\"" + auteur + "\" posted a new message on thread id: " + idThread);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException
 				| ParseException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + (String) req.getSession().getAttribute("user")
+					+ "\" tried to post a new message, error: " + e.getMessage());
 		}
 		resp.sendRedirect("/forum/thread?id=" + idThread);
 	}

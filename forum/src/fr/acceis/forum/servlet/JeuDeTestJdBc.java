@@ -6,9 +6,7 @@ import java.sql.Statement;
 
 public class JeuDeTestJdBc {
 
-	public final static String[] QUERIES = { 
-			"drop table if exists Messages",
-			"drop table if exists Threads",
+	public final static String[] QUERIES = { "drop table if exists Messages", "drop table if exists Threads",
 			"drop table if exists Utilisateurs",
 
 			"create table Utilisateurs (id integer primary key, login varchar(255) not null, password varchar(255), posts integer default 0, signup varchar(100) default 'Was born here', avatar varchar(255) default 'default.jpg', role varchar(255) default 'User')",
@@ -32,7 +30,6 @@ public class JeuDeTestJdBc {
 		Statement stmt = connexion.createStatement();
 
 		for (String query : QUERIES) {
-//			System.out.println(query);
 			stmt.executeUpdate(query);
 		}
 

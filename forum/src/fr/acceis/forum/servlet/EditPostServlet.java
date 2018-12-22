@@ -7,8 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EditPostServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(EditPostServlet.class);
 
 	/**
 	 * 
@@ -17,20 +23,23 @@ public class EditPostServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		if (req.getSession().getAttribute("idThread") == null) {
+		HttpSession session = req.getSession(false);
+		String user = (String) session.getAttribute("user");
+		int idMsg = Integer.parseInt(req.getParameter("id"));
+
+		if (session.getAttribute("idThread") == null) {
+			logger.warn("\"" + user + "\" tried to edit a post but was redirected to home");
 			resp.sendRedirect("/forum/home");
 		} else {
 
 			DAOServlet dao;
 			try {
 				dao = DAOServlet.getDAO();
-				int idMsg = Integer.parseInt(req.getParameter("id"));
-				int idThread = (int) req.getSession().getAttribute("idThread");
-
+				int idThread = (int) session.getAttribute("idThread");
 				String u = dao.userFromMessageId(idMsg);
-				String user = (String) req.getSession().getAttribute("user");
 
 				if (!user.equals(u)) {
+					logger.warn("\"" + user + "\" tried to edit someone else post without permissions");
 					resp.sendRedirect("/forum/thread?id=" + idThread);
 					return;
 				} else {
@@ -39,7 +48,8 @@ public class EditPostServlet extends HttpServlet {
 					req.setAttribute("txt", msg);
 				}
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
+				logger.error("\"" + user + "\" error while trying to edit message id:" + idMsg + ", error: "
+						+ e.getMessage());
 			}
 			req.getRequestDispatcher("/WEB-INF/jsp/editpost.jsp").forward(req, resp);
 
@@ -51,14 +61,17 @@ public class EditPostServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String texte = req.getParameter("texte");
 		int idThread = (int) req.getSession().getAttribute("idThread");
+		int idMsg = Integer.parseInt(req.getParameter("id"));
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();
-			int idMsg = Integer.parseInt(req.getParameter("id"));
 			dao.updateTexte(idMsg, texte);
 			dao.updateDate(idMsg);
+			logger.info("\"" + (String) req.getSession().getAttribute("user") + "\" edited a post id: " + idMsg
+					+ " from thread id: " + idThread);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+			logger.error("error while \"" + (String) req.getSession().getAttribute("user")
+					+ "\" tried to edit the post " + idMsg + " from thread " + idThread + ", error: " + e.getMessage());
 		}
 		resp.sendRedirect("/forum/thread?id=" + idThread);
 	}

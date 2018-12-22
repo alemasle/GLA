@@ -13,6 +13,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.entity.Message;
 import fr.acceis.forum.entity.Thread;
 import fr.acceis.forum.entity.Utilisateur;
@@ -23,6 +26,8 @@ import fr.acceis.forum.roles.Role;
 import fr.acceis.forum.roles.User;
 
 public final class DAOServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(DAOServlet.class);
 
 	/**
 	 * 
@@ -77,7 +82,7 @@ public final class DAOServlet extends HttpServlet {
 		ResultSet res1 = stat.executeQuery();
 
 		if (res1.next()) {
-			System.out.println("\"" + user + "\" already exists");
+			logger.warn("Can not add user \"" + user + "\", already exists");
 			res1.close();
 			stat.close();
 			return false;
@@ -150,7 +155,7 @@ public final class DAOServlet extends HttpServlet {
 			statAut.setInt(1, auteurId);
 			ResultSet aut = statAut.executeQuery();
 
-			String auteur = "???";
+			String auteur = null;
 			if (aut.next()) {
 				auteur = aut.getString("login");
 			}
@@ -494,7 +499,7 @@ public final class DAOServlet extends HttpServlet {
 			String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
 			File old = new File(path + oldAvatar);
 			old.delete();
-			System.out.println("Deleting " + user + "'s old avatar: " + oldAvatar);
+			logger.info("Deleting \"" + user + "\" old avatar: " + oldAvatar);
 		}
 
 		String sql = "UPDATE Utilisateurs SET avatar=? WHERE login=?";
@@ -541,7 +546,7 @@ public final class DAOServlet extends HttpServlet {
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
 		statAut.setInt(1, idThread);
 		ResultSet res = statAut.executeQuery();
-		String name = "???";
+		String name = null;
 
 		if (res.next()) {
 			name = res.getString("name");

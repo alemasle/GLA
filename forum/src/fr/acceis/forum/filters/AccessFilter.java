@@ -12,12 +12,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import fr.acceis.forum.controlAccessManager.ControleAccessManager;
 import fr.acceis.forum.entity.Utilisateur;
 import fr.acceis.forum.roles.Invite;
 import fr.acceis.forum.roles.Role;
 
 public class AccessFilter implements Filter {
+
+	private final static Logger logger = LogManager.getLogger(AccessFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
@@ -38,6 +43,7 @@ public class AccessFilter implements Filter {
 			Role role = new Invite();
 			Utilisateur invite = new Utilisateur("invite", "", 0, -1, "", "", role);
 			session.setAttribute("utilisateur", invite);
+			logger.info("New visitor ip: " + req.getRemoteAddr());
 		}
 
 		Utilisateur utilisateur = (Utilisateur) session.getAttribute("utilisateur");
@@ -56,16 +62,29 @@ public class AccessFilter implements Filter {
 			String params = req.getQueryString();
 			if (params != null) {
 				params = "?" + params;
+			} else {
+				params = "";
 			}
 			session.setAttribute("accessWanted", "/forum/" + path + params);
 		}
 
 		if (ControleAccessManager.autorize(utilisateur, path)) {
+			if (utilisateur.getRole().getRole().equals("invite")) {
+				logger.info("visitor " + req.getRemoteAddr() + " has been autorized to access \"" + path + "\" method: "
+						+ req.getMethod());
+			} else {
+				logger.info(
+						"\"" + utilisateur.getLogin() + "\" accesses to \"" + path + "\" method: " + req.getMethod());
+			}
 			chain.doFilter(req, resp);
 		} else {
 			if (utilisateur.getLogin().compareTo("invite") == 0) {
+				logger.warn("visitor " + req.getRemoteAddr() + " has been refused to access \"" + path
+						+ "\", redirected to login");
 				resp.sendRedirect("/forum/login");
 			} else {
+				logger.warn("\"" + utilisateur.getLogin() + "\" is unautorized to access \"" + path
+						+ "\", redirected to home");
 				resp.sendRedirect("/forum/home");
 			}
 		}

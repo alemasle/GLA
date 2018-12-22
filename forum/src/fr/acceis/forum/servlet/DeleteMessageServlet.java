@@ -12,7 +12,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DeleteMessageServlet extends HttpServlet {
+
+	private final static Logger logger = LogManager.getLogger(DeleteMessageServlet.class);
 
 	/**
 	 * 
@@ -40,21 +45,22 @@ public class DeleteMessageServlet extends HttpServlet {
 
 			StringBuffer hexString = sha256(passSalted);
 			hashedSalted = hexString.toString();
-			System.out.println("Hashé et salé: " + hashedSalted);
 
 			dao = DAOServlet.getDAO();
 			if (dao.checkUser(user, hashedSalted)) {
 				dao.deleteMessage(id);
-				System.out.println("--> \"" + user + "\": Suppression message " + id);
+				logger.info("\"" + user + "\" deleted a message, id:" + id);
 				resp.sendRedirect("/forum/thread?id=" + idThread);
 
 			} else {
+				logger.warn("\"" + user + "\" wrong password to delete the message at id:" + id);
 				req.setAttribute("error", "invalide");
 				req.getRequestDispatcher("/WEB-INF/jsp/deletemessage.jsp").forward(req, resp);
 			}
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException
 				| NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error(
+					"\"" + user + "\" error while trying to delete message id:" + id + ", error: " + e.getMessage());
 		}
 	}
 
