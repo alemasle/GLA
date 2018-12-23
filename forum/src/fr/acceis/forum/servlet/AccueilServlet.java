@@ -41,6 +41,7 @@ public class AccueilServlet extends HttpServlet {
 			logger.error("\"" + (String) session.getAttribute("user") + "\" error while trying to access home, error: "
 					+ e.getMessage());
 		}
+		session.setAttribute("sourceFrom", "home");
 		req.getRequestDispatcher("/WEB-INF/jsp/threads.jsp").forward(req, resp);
 	}
 

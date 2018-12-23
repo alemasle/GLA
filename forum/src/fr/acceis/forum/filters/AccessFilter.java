@@ -68,6 +68,11 @@ public class AccessFilter implements Filter {
 			session.setAttribute("accessWanted", "/forum/" + path + params);
 		}
 
+		String sourceFrom = (String) session.getAttribute("sourceFrom");
+		if (sourceFrom == null) {
+			session.setAttribute("sourceFrom", "home");
+		}
+
 		if (ControleAccessManager.autorize(utilisateur, path)) {
 			if (utilisateur.getRole().getRole().equals("invite")) {
 				logger.info("visitor " + req.getRemoteAddr() + " has been autorized to access \"" + path + "\" method: "
@@ -76,7 +81,9 @@ public class AccessFilter implements Filter {
 				logger.info(
 						"\"" + utilisateur.getLogin() + "\" accesses to \"" + path + "\" method: " + req.getMethod());
 			}
+
 			chain.doFilter(req, resp);
+
 		} else {
 			if (utilisateur.getLogin().compareTo("invite") == 0) {
 				logger.warn("visitor " + req.getRemoteAddr() + " has been refused to access \"" + path

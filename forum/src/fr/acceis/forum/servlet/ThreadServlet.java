@@ -48,6 +48,7 @@ public class ThreadServlet extends HttpServlet {
 			req.setAttribute("messages", messages);
 			req.setAttribute("threadName", threadName);
 			session.setAttribute("idThread", threadId);
+			session.setAttribute("sourceFrom", "thread?id=" + threadId);
 			req.getRequestDispatcher("/WEB-INF/jsp/thread.jsp").forward(req, resp);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
 			logger.error("error while \"" + (String) req.getSession().getAttribute("user")

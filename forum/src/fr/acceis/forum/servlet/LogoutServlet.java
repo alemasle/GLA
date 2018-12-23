@@ -31,6 +31,7 @@ public class LogoutServlet extends HttpServlet {
 		session.invalidate();
 		logger.info("The " + utilisateur.getRole().getRole() + " \"" + user + "\" has disconnected. ip: "
 				+ req.getRemoteAddr());
+
 		resp.sendRedirect("/forum/home");
 	}
 

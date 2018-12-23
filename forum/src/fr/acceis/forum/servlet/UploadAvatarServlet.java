@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -35,14 +36,29 @@ public class UploadAvatarServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+		session.setAttribute("sourceFrom", "uploadavatar");
 		req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String user = (String) req.getSession().getAttribute("user");
+		HttpSession session = req.getSession(false);
+		String user = (String) session.getAttribute("user");
 		FileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
+
+		String sourceFrom = (String) session.getAttribute("sourceFrom");
+		if (!sourceFrom.equals("uploadavatar")) {
+			if (!user.equals("invite"))
+				logger.warn("\"" + user
+						+ "\" tried to upload a new avatar without being in the good page, redirected to home");
+			else
+				logger.warn("visitor " + req.getRemoteAddr()
+						+ " tried to upload a new avatar without being in the good page, redirected to home");
+			resp.sendRedirect("/forum/home");
+			return;
+		}
 
 		DAOServlet dao;
 		try {

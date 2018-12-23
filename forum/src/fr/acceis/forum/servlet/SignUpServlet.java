@@ -29,11 +29,23 @@ public class SignUpServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+		session.setAttribute("sourceFrom", "signup");
 		req.getRequestDispatcher("/WEB-INF/jsp/signup.jsp").forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession(false);
+
+		String sourceFrom = (String) session.getAttribute("sourceFrom");
+		if (!sourceFrom.equals("signup")) {
+			logger.warn("visitor " + req.getRemoteAddr()
+					+ " tried to signup a message without being in the good page, redirected to home");
+			resp.sendRedirect("/forum/home");
+			return;
+		}
+
 		String user = req.getParameter("username");
 		String pass = req.getParameter("password");
 
@@ -86,7 +98,6 @@ public class SignUpServlet extends HttpServlet {
 
 					else if (dao.addUser(user, hashedSalted)) {
 						Utilisateur u = dao.getUser(user);
-						HttpSession session = req.getSession();
 						session.setAttribute("sess", true);
 						session.setAttribute("user", user);
 						session.setAttribute("utilisateur", u);

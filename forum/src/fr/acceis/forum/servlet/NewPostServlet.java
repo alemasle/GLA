@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +24,7 @@ public class NewPostServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		HttpSession session = req.getSession(false);
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();
@@ -34,14 +35,29 @@ public class NewPostServlet extends HttpServlet {
 					+ "\" tried to access newpost page, error: " + e.getMessage());
 		}
 
+		session.setAttribute("sourceFrom", "newpost");
 		req.getRequestDispatcher("/WEB-INF/jsp/newpost.jsp").forward(req, resp);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String auteur = (String) req.getSession().getAttribute("user");
+		HttpSession session = req.getSession(false);
+		String auteur = (String) session.getAttribute("user");
 		String texte = req.getParameter("texte");
-		int idThread = (int) req.getSession().getAttribute("idThread");
+		int idThread = (int) session.getAttribute("idThread");
+
+		String sourceFrom = (String) session.getAttribute("sourceFrom");
+		if (!sourceFrom.equals("newpost")) {
+			if (!auteur.equals("invite"))
+				logger.warn("\"" + auteur
+						+ "\" tried to post a new message without being in the good page, redirected to home");
+			else
+				logger.warn("visitor " + req.getRemoteAddr()
+						+ " tried to post a new message without being in the good page, redirected to home");
+			resp.sendRedirect("/forum/home");
+			return;
+		}
+
 		DAOServlet dao;
 		try {
 			dao = DAOServlet.getDAO();

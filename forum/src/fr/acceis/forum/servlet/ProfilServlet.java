@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ public class ProfilServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		HttpSession session = req.getSession(false);
 		String login = req.getParameter("login");
 		DAOServlet dao;
 		try {
@@ -37,6 +38,7 @@ public class ProfilServlet extends HttpServlet {
 			req.setAttribute("threads_answered", lthread);
 			req.setAttribute("login", login);
 			req.setAttribute("userProfil", profil);
+			session.setAttribute("sourceFrom", "profil?login=" + login);
 			req.getRequestDispatcher("/WEB-INF/jsp/profil.jsp").forward(req, resp);
 
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
