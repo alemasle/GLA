@@ -33,7 +33,8 @@ public class DeleteMessageServlet extends HttpServlet {
 		Utilisateur u = (Utilisateur) session.getAttribute("utilisateur");
 		int id = Integer.parseInt(req.getParameter("id"));
 
-		if (session.getAttribute("idThread") == null) {
+		if (session.getAttribute("idThread") == null) { // Refused and redirected if the user tried to delete a message
+														// from an unknown location
 			logger.warn("\"" + user + "\" tried to delete a post from invalid page, redirected to home");
 			resp.sendRedirect("/forum/home");
 			return;
@@ -62,7 +63,7 @@ public class DeleteMessageServlet extends HttpServlet {
 			resp.sendRedirect("/forum/" + (String) req.getAttribute("sourceFrom"));
 			return;
 		}
-		session.setAttribute("sourceFrom", "deletemessage?id=" + id);
+		session.setAttribute("sourceFrom", "deletemessage?id=" + id); // Save last page accessed is set now
 		req.getRequestDispatcher("/WEB-INF/jsp/deletemessage.jsp").forward(req, resp);
 	}
 
@@ -75,7 +76,8 @@ public class DeleteMessageServlet extends HttpServlet {
 		int idThread = (int) session.getAttribute("idThread");
 
 		String sourceFrom = (String) session.getAttribute("sourceFrom");
-		if (!sourceFrom.equals("deletemessage?id=" + id)) {
+		if (!sourceFrom.equals("deletemessage?id=" + id)) { // If the last page was not the delete page then refused and
+															// redirected
 			if (!user.equals("invite"))
 				logger.warn("\"" + user
 						+ "\" tried to delete a message without being in the good page, redirected to home");
@@ -96,7 +98,7 @@ public class DeleteMessageServlet extends HttpServlet {
 			hashedSalted = hexString.toString();
 
 			dao = DAOServlet.getDAO();
-			if (dao.checkUser(user, hashedSalted)) {
+			if (dao.checkUser(user, hashedSalted)) { // Check if the user can delete the message
 				dao.deleteMessage(id);
 				logger.info("\"" + user + "\" deleted a message, id:" + id);
 				resp.sendRedirect("/forum/thread?id=" + idThread);

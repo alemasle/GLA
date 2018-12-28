@@ -5,6 +5,13 @@ import fr.acceis.forum.roles.Role;
 
 public class ControleAccessManager {
 
+	/**
+	 * Check if the user can access the url according to its rights
+	 * 
+	 * @param user
+	 * @param uri
+	 * @return true if autorized, false otherwise
+	 */
 	public static boolean autorize(Utilisateur user, String uri) {
 
 		Role role = user.getRole();

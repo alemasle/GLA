@@ -311,6 +311,13 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Get an autor's id using its name
+	 * 
+	 * @param auteur
+	 * @return
+	 * @throws SQLException
+	 */
 	public int getIdAuteur(String auteur) throws SQLException {
 		String sqlAuteurId = "SELECT id FROM Utilisateurs WHERE login=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
@@ -327,6 +334,13 @@ public final class DAOServlet extends HttpServlet {
 		return -1;
 	}
 
+	/**
+	 * Create a new thread create by "auteur" with the title "titre"
+	 * 
+	 * @param auteur
+	 * @param titre
+	 * @throws SQLException
+	 */
 	public void newThread(String auteur, String titre) throws SQLException {
 		int auteurId = getIdAuteur(auteur);
 		String sql = "INSERT INTO Threads(auteur, name, vues) VALUES(?,?,0)";
@@ -338,6 +352,16 @@ public final class DAOServlet extends HttpServlet {
 
 	}
 
+	/**
+	 * Create a new post from "auteur" with the text "texte" to the thread
+	 * "idThread"
+	 * 
+	 * @param idThread
+	 * @param auteur
+	 * @param texte
+	 * @throws SQLException
+	 * @throws ParseException
+	 */
 	public void newPost(int idThread, String auteur, String texte) throws SQLException, ParseException {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
@@ -353,6 +377,12 @@ public final class DAOServlet extends HttpServlet {
 		stat.executeUpdate();
 	}
 
+	/**
+	 * Update the number of posts from a same "auteur"
+	 * 
+	 * @param auteur
+	 * @throws SQLException
+	 */
 	public void updateNbPosts(String auteur) throws SQLException {
 		int id = getIdAuteur(auteur);
 		int nbPosts = countMessagesAuteur(id);
@@ -366,6 +396,13 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Return the text from a message
+	 * 
+	 * @param idMsg
+	 * @return
+	 * @throws SQLException
+	 */
 	public String getTexte(int idMsg) throws SQLException {
 		String sqlAuteurId = "SELECT texte FROM Messages WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlAuteurId);
@@ -383,6 +420,12 @@ public final class DAOServlet extends HttpServlet {
 		return "";
 	}
 
+	/**
+	 * Update a message date of modification
+	 * 
+	 * @param idMsg
+	 * @throws SQLException
+	 */
 	public void updateDate(int idMsg) throws SQLException {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
 		java.util.Date uDate = new java.util.Date();
@@ -397,6 +440,13 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Update the text in a message
+	 * 
+	 * @param idMsg
+	 * @param txt
+	 * @throws SQLException
+	 */
 	public void updateTexte(int idMsg, String txt) throws SQLException {
 		String sql = "UPDATE Messages SET texte=? WHERE id=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
@@ -406,6 +456,13 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Return all the threads created by user
+	 * 
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Thread> getThreadUser(String user) throws SQLException {
 		List<Thread> lth = new ArrayList<Thread>();
 		int auteur = getIdAuteur(user);
@@ -425,6 +482,13 @@ public final class DAOServlet extends HttpServlet {
 		return lth;
 	}
 
+	/**
+	 * Return a user's login from its id
+	 * 
+	 * @param idAut
+	 * @return
+	 * @throws SQLException
+	 */
 	public String getLogin(int idAut) throws SQLException {
 		String sqlThreadsId = "SELECT login FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
@@ -445,6 +509,13 @@ public final class DAOServlet extends HttpServlet {
 		return getLogin(idAut);
 	}
 
+	/**
+	 * Return the complete user from its id
+	 * 
+	 * @param idUser
+	 * @return
+	 * @throws SQLException
+	 */
 	public Utilisateur getUser(int idUser) throws SQLException {
 		String sqlThreadsId = "SELECT * FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
@@ -479,7 +550,6 @@ public final class DAOServlet extends HttpServlet {
 				role = new Invite();
 				break;
 			}
-//			Role role = new Administrateur();
 
 			user = new Utilisateur(login, password, id, nbPosts, signup, avatar, role);
 		}
@@ -487,16 +557,30 @@ public final class DAOServlet extends HttpServlet {
 		return user;
 	}
 
-	public Utilisateur getUser(String idUser) throws SQLException {
-		int user = getIdAuteur(idUser);
-		return getUser(user);
+	/**
+	 * Return a complete Utilisateur from its login
+	 * 
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
+	public Utilisateur getUser(String user) throws SQLException {
+		int u = getIdAuteur(user);
+		return getUser(u);
 	}
 
+	/**
+	 * Update a user's avatar
+	 * 
+	 * @param user
+	 * @param avatar
+	 * @throws SQLException
+	 */
 	public void updateAvatar(String user, String avatar) throws SQLException {
 		String oldAvatar = getAvatar(user);
 
 		if (oldAvatar.compareTo(avatar) != 0 && oldAvatar.compareTo("default.jpg") != 0) {
-			String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
+			String path = System.getProperty("user.dir") + "/WebContent/fichiers/";
 			File old = new File(path + oldAvatar);
 			old.delete();
 			logger.info("Deleting \"" + user + "\" old avatar: " + oldAvatar);
@@ -511,11 +595,25 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Return an user's avatar path from its login
+	 * 
+	 * @param user
+	 * @return
+	 * @throws SQLException
+	 */
 	public String getAvatar(String user) throws SQLException {
 		int id = getIdAuteur(user);
 		return getAvatar(id);
 	}
 
+	/**
+	 * Return an user's avatar path from its id
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
 	public String getAvatar(int id) throws SQLException {
 		String sqlThreadsId = "SELECT avatar FROM Utilisateurs WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
@@ -532,6 +630,12 @@ public final class DAOServlet extends HttpServlet {
 		return path;
 	}
 
+	/**
+	 * Delete a message
+	 * 
+	 * @param idMsg
+	 * @throws SQLException
+	 */
 	public void deleteMessage(int idMsg) throws SQLException {
 		String sql = "DELETE FROM Messages WHERE id=?";
 		PreparedStatement stat = connexion.prepareStatement(sql);
@@ -541,6 +645,13 @@ public final class DAOServlet extends HttpServlet {
 		stat.close();
 	}
 
+	/**
+	 * Return the name of a thread from its id
+	 * 
+	 * @param idThread
+	 * @return
+	 * @throws SQLException
+	 */
 	public String getThreadName(int idThread) throws SQLException {
 		String sqlThreadsId = "SELECT name FROM Threads WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);
@@ -557,6 +668,13 @@ public final class DAOServlet extends HttpServlet {
 		return name;
 	}
 
+	/**
+	 * Return the user that wrote a message
+	 * 
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
 	public String userFromMessageId(int id) throws SQLException {
 		String sqlThreadsId = "SELECT auteur FROM Messages WHERE id=?";
 		PreparedStatement statAut = connexion.prepareStatement(sqlThreadsId);

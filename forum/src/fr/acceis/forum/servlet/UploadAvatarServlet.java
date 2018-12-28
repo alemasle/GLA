@@ -49,7 +49,8 @@ public class UploadAvatarServlet extends HttpServlet {
 		ServletFileUpload upload = new ServletFileUpload(factory);
 
 		String sourceFrom = (String) session.getAttribute("sourceFrom");
-		if (!sourceFrom.equals("uploadavatar")) {
+		if (!sourceFrom.equals("uploadavatar")) { // If last page was not uploadavatar then user is refused and
+													// redirected
 			if (!user.equals("invite"))
 				logger.warn("\"" + user
 						+ "\" tried to upload a new avatar without being in the good page, redirected to home");
@@ -68,7 +69,7 @@ public class UploadAvatarServlet extends HttpServlet {
 			if (!items.isEmpty()) {
 				FileItem fi = items.get(0);
 
-				if (fi.getSize() > SIZE_MAX) {
+				if (fi.getSize() > SIZE_MAX) { // Refused if the image is too big
 					logger.warn(
 							"\"" + user + "\" uploaded " + fi.getName() + ", error size of image too big: REJECTED");
 
@@ -77,13 +78,13 @@ public class UploadAvatarServlet extends HttpServlet {
 
 				} else {
 
-					if ("".equals(fi.getName())) {
+					if ("".equals(fi.getName())) { // Refused if no file is given
 						logger.warn("\"" + user + "\" tried to upload an empty file: REJECTED");
 						req.setAttribute("error", "emptyfields");
 						req.getRequestDispatcher("/WEB-INF/jsp/uploadavatar.jsp").forward(req, resp);
 					} else {
 
-						String path = System.getProperty("user.dir") + "/forum/WebContent/fichiers/";
+						String path = System.getProperty("user.dir") + "/WebContent/fichiers/";
 						String[] tabName = fi.getName().split("\\.");
 						String extension = tabName[tabName.length - 1];
 						String[] ext_valables = { "jpg", "png", "gif" };
@@ -127,11 +128,11 @@ public class UploadAvatarServlet extends HttpServlet {
 							is.close();
 							os.close();
 
-							logger.info("\"" + user + "\" uploaded a new avatar: \"" + fileName + "\"");
+							logger.info("\"" + user + "\" uploaded a new avatar: \"" + path + fileName + "\"");
 							req.getSession().setAttribute("avatar", dao.getAvatar(user));
 							resp.sendRedirect("/forum/profil?login=" + URLEncoder.encode(user, "UTF-8"));
 
-						} catch (Exception exp) {
+						} catch (Exception exp) { // Catch if the file is not an image
 							outputFile.delete();
 							logger.warn("error while converting the image from \"" + user
 									+ "\" , can be corrupted: REJECTED. error: " + exp.getMessage());

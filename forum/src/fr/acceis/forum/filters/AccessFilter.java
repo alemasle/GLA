@@ -38,7 +38,7 @@ public class AccessFilter implements Filter {
 		HttpSession session = req.getSession();
 		req.setCharacterEncoding("UTF-8");
 
-		if (session.getAttribute("user") == null || session.getAttribute("utilisateur") == null) {
+		if (session.getAttribute("user") == null || session.getAttribute("utilisateur") == null) { // Nouveau visiteur
 			session.setAttribute("user", "invite");
 			Role role = new Invite();
 			Utilisateur invite = new Utilisateur("invite", "", 0, -1, "", "", role);
@@ -52,7 +52,8 @@ public class AccessFilter implements Filter {
 			path = path.substring(1);
 		}
 
-		if (path.startsWith("css") || path.startsWith("fichiers")) {
+		if (path.startsWith("css") || path.startsWith("fichiers")) { // Autorisation d'accès aux feuilles css et aux
+																		// fichiers comme les avatars utilisateurs.
 			chain.doFilter(req, resp);
 			return;
 		}
@@ -65,15 +66,18 @@ public class AccessFilter implements Filter {
 			} else {
 				params = "";
 			}
-			session.setAttribute("accessWanted", "/forum/" + path + params);
+			session.setAttribute("accessWanted", "/forum/" + path + params); // Sauvegarde de la destination voulue par
+																				// l'utilisateur en cas de redirection
+																				// vers login
 		}
 
 		String sourceFrom = (String) session.getAttribute("sourceFrom");
 		if (sourceFrom == null) {
-			session.setAttribute("sourceFrom", "home");
+			session.setAttribute("sourceFrom", "home"); // Permet de vérifier la provenance de la requete, vérifie
+														// l'acces a une page depuis une page valide.
 		}
 
-		if (ControleAccessManager.autorize(utilisateur, path)) {
+		if (ControleAccessManager.autorize(utilisateur, path)) { // Autorisation d'acces a une url selon l'utilisateur
 			if (utilisateur.getRole().getRole().equals("invite")) {
 				logger.info("visitor " + req.getRemoteAddr() + " has been autorized to access \"" + path + "\" method: "
 						+ req.getMethod());
@@ -84,7 +88,7 @@ public class AccessFilter implements Filter {
 
 			chain.doFilter(req, resp);
 
-		} else {
+		} else { // Refus d'acces a l'url
 			if (utilisateur.getLogin().compareTo("invite") == 0) {
 				logger.warn("visitor " + req.getRemoteAddr() + " has been refused to access \"" + path
 						+ "\", redirected to login");
